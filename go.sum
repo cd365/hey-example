@@ -1,5 +1,5 @@
-github.com/cd365/hey/v3 v3.0.0-20250319045440-23e925c01697 h1:qCqMleDTw2qab1cgOT2aY2c9yJ2Qwo8QTkMX4xvhOn8=
-github.com/cd365/hey/v3 v3.0.0-20250319045440-23e925c01697/go.mod h1:dqhmaDcNX8tD8mxcf+PqH9BUWvYIxNRSMXnK7tp5iVE=
+github.com/cd365/hey/v3 v3.0.0-20250320032815-9629e8f0a1f0 h1:5pxCd3/aLhAJY2QrFRWv1KqUJ4fFnN1WrcDX2/q8qis=
+github.com/cd365/hey/v3 v3.0.0-20250320032815-9629e8f0a1f0/go.mod h1:dqhmaDcNX8tD8mxcf+PqH9BUWvYIxNRSMXnK7tp5iVE=
 github.com/cd365/logger/v8 v8.0.0-20250226033437-965038aafb8f h1:8JWqGYujlqb/OVsgRQ5N6NtScRgY/oniuhxnZzwiDD8=
 github.com/cd365/logger/v8 v8.0.0-20250226033437-965038aafb8f/go.mod h1:jLYY0smjfMmwDPgL2eZfF4LbaCUxrFLEgNe61HGmCYo=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
