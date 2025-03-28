@@ -1,4 +1,4 @@
-// code template version: v3.0.0 8232b1ce979cdaf7365eb708a30dddfa0cbaa290 1742361115-20250319131155
+// code template version: v3.0.0 c3e763620528071cd91f9f9535dd9700e721d7a5 1743124166-20250328090926
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -6,6 +6,7 @@ package model
 import (
 	"context"
 	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/cd365/hey-example/db/abc"
 	"github.com/cd365/hey/v3"
@@ -333,7 +334,7 @@ func (s *S000001Company) SelectQuery(where hey.Filter, custom func(get *hey.Get)
 
 // EmptySlice Initialize an empty slice.
 func (s *S000001Company) EmptySlice() []*Company {
-	return make([]*Company, 0, 1<<5)
+	return make([]*Company, 0)
 }
 
 // SelectGet SQL SELECT.
@@ -371,7 +372,7 @@ func (s *S000001Company) SelectOne(where hey.Filter, custom func(get *hey.Get), 
 		return nil, err
 	}
 	if len(all) == 0 {
-		return nil, nil
+		return nil, hey.RecordDoesNotExists
 	}
 	return all[0], nil
 }
@@ -384,7 +385,7 @@ func (s *S000001Company) SelectExists(where hey.Filter, custom func(get *hey.Get
 		}
 		get.Columns(func(columns hey.QueryColumns) { columns.Add(s.columnSlice[0]) })
 	}, ways...)
-	if err != nil {
+	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
 	}
 	return exists != nil, nil
@@ -721,7 +722,7 @@ func (s *S000001Company) RowsScanOne(where hey.Filter, custom func(get *hey.Get)
 		return nil, err
 	}
 	if len(lists) == 0 {
-		return nil, nil
+		return nil, hey.RecordDoesNotExists
 	}
 	return lists[0], nil
 }
@@ -1009,7 +1010,7 @@ func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, fil
 		return false, nil
 	}
 	exists, err := s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get) { get.Columns(func(columns hey.QueryColumns) { columns.Add(s.PrimaryKey()) }) }, filter, ways...)
-	if err != nil {
+	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
 	}
 	return exists != nil, nil
@@ -1067,7 +1068,7 @@ func (s *S000001Company) UpsertOne(filter func(f hey.Filter, g *hey.Get), upsert
 			filter(where, get)
 		}
 	}, ways...)
-	if err != nil {
+	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, 0, err
 	}
 	exists = first != nil
@@ -1094,7 +1095,7 @@ func (s *S000001Company) NotFoundInsert(filter func(f hey.Filter, g *hey.Get), c
 			filter(where, get)
 		}
 	}, ways...)
-	if err != nil {
+	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
 	}
 	exists = first != nil

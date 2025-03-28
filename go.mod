@@ -3,7 +3,7 @@ module github.com/cd365/hey-example
 go 1.23.7
 
 require (
-	github.com/cd365/hey/v3 v3.0.0-20250320070146-3cbc37cd2c9b
+	github.com/cd365/hey/v3 v3.0.0-20250328005832-518fba31af0e
 	github.com/cd365/logger/v8 v8.0.0
 	github.com/lib/pq v1.10.9
 )

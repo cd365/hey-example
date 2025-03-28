@@ -131,8 +131,7 @@ func initDatabase() error {
 	bizSchema, err := biz.NewSchema(dbSchema, func(db *model.Database, schema *biz.Schema) error {
 		return nil
 	})
-	tabCustom := tab.NewCustom(bizSchema)
-	schema = tab.NewSchema(bizSchema, tabCustom)
+	schema = tab.NewSchema(bizSchema)
 
 	// Delete specific identifiers in SQL statements.
 	cfg = way.GetCfg()
