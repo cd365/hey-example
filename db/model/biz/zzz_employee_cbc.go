@@ -1,4 +1,4 @@
-// code template version: v3.0.0 c3e763620528071cd91f9f9535dd9700e721d7a5 1743124166-20250328090926
+// code template version: v3.0.0 876382ccafbc7ec905331e01d9c66afa58a11d6b 1744869629-20250417140029
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package biz
@@ -62,7 +62,7 @@ func (s *employee) SelectColumn(columns ...string) func(queryColumns hey.QueryCo
 func (s *employee) SelectColumnCmder(custom func(f hey.Filter, g *hey.Get), columns ...string) hey.Cmder {
 	m := s.Model()
 	where := m.Filter()
-	result := m.Get().Columns(s.SelectColumn(columns...))
+	result := m.Get().Select(columns...)
 	if custom != nil {
 		custom(where, result)
 	}

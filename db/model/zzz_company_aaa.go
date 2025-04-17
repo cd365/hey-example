@@ -1,4 +1,4 @@
-// code template version: v3.0.0 c3e763620528071cd91f9f9535dd9700e721d7a5 1743124166-20250328090926
+// code template version: v3.0.0 876382ccafbc7ec905331e01d9c66afa58a11d6b 1744869629-20250417140029
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -191,7 +191,7 @@ func (s *S000001Company) Mod(ways ...*hey.Way) *hey.Mod {
 }
 
 func (s *S000001Company) Get(ways ...*hey.Way) *hey.Get {
-	return s.Way(ways...).Get(s.Table()).Columns(func(columns hey.QueryColumns) { columns.AddAll(s.columnSlice...) })
+	return s.Way(ways...).Get(s.Table()).Select(s.columnSlice...)
 }
 
 func (s *S000001Company) Available() hey.Filter {
@@ -320,7 +320,7 @@ func (s *S000001Company) InsertSelect(columns []string, get *hey.Get, ways ...*h
 
 // SelectCount SQL SELECT COUNT.
 func (s *S000001Company) SelectCount(where hey.Filter, ways ...*hey.Way) (int64, error) {
-	return s.Get(ways...).Columns(func(columns hey.QueryColumns) { columns.Add(s.columnSlice[0]) }).Where(func(f hey.Filter) { f.Use(where) }).Count()
+	return s.Get(ways...).Select(s.columnSlice[0]).Where(func(f hey.Filter) { f.Use(where) }).Count()
 }
 
 // SelectQuery SQL SELECT.
@@ -383,7 +383,7 @@ func (s *S000001Company) SelectExists(where hey.Filter, custom func(get *hey.Get
 		if custom != nil {
 			custom(get)
 		}
-		get.Columns(func(columns hey.QueryColumns) { columns.Add(s.columnSlice[0]) })
+		get.Select(s.columnSlice[0])
 	}, ways...)
 	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
@@ -686,7 +686,7 @@ func (s *S000001Company) RowsScanAll(where hey.Filter, custom func(get *hey.Get)
 	if custom != nil {
 		custom(get)
 	}
-	get.Columns(func(columns hey.QueryColumns) { columns.AddAll(s.columnSlice...) })
+	get.Select(s.columnSlice...)
 	lists = make([]*Company, 0, 1<<5)
 	if err = get.Query(func(rows *sql.Rows) (err error) {
 		for rows.Next() {
@@ -1009,7 +1009,7 @@ func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, fil
 	if primaryKeyValue == nil {
 		return false, nil
 	}
-	exists, err := s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get) { get.Columns(func(columns hey.QueryColumns) { columns.Add(s.PrimaryKey()) }) }, filter, ways...)
+	exists, err := s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get) { get.Select(s.PrimaryKey()) }, filter, ways...)
 	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
 	}
@@ -1063,7 +1063,7 @@ func (s *S000001Company) PrimaryKeyExists(primaryKey interface{}, ways ...*hey.W
 func (s *S000001Company) UpsertOne(filter func(f hey.Filter, g *hey.Get), upsert interface{}, ways ...*hey.Way) (exists bool, affectedRowsOrIdValue int64, err error) {
 	where := s.Filter()
 	first, err := s.SelectOne(where, func(get *hey.Get) {
-		get.Columns(func(columns hey.QueryColumns) { columns.Add(s.PrimaryKey()) })
+		get.Select(s.PrimaryKey())
 		if filter != nil {
 			filter(where, get)
 		}
@@ -1090,7 +1090,7 @@ func (s *S000001Company) UpsertOne(filter func(f hey.Filter, g *hey.Get), upsert
 func (s *S000001Company) NotFoundInsert(filter func(f hey.Filter, g *hey.Get), create interface{}, ways ...*hey.Way) (exists bool, err error) {
 	where := s.Filter()
 	first, err := s.SelectOne(where, func(get *hey.Get) {
-		get.Columns(func(columns hey.QueryColumns) { columns.Add(s.PrimaryKey()) })
+		get.Select(s.PrimaryKey())
 		if filter != nil {
 			filter(where, get)
 		}

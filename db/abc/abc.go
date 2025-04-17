@@ -1,4 +1,4 @@
-// code template version: v3.0.0 c3e763620528071cd91f9f9535dd9700e721d7a5 1743124166-20250328090926
+// code template version: v3.0.0 876382ccafbc7ec905331e01d9c66afa58a11d6b 1744869629-20250417140029
 // TEMPLATE CODE DO NOT EDIT IT.
 
 /*
@@ -46,6 +46,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/cd365/hey/v3"
+	"reflect"
 	"regexp"
 	"strconv"
 	"strings"
@@ -189,6 +190,41 @@ func (s SelectIndexValueMaxMin) UseIndexValueMin(column string, filter hey.Filte
 		return false
 	}
 	filter.GreaterThan(column, *s.IndexValueMin)
+	return true
+}
+
+type SelectLike struct{}
+
+func (s SelectLike) UseLike(column string, filter hey.Filter, value interface{}, formats ...string) bool {
+	if column == "" || filter == nil || value == nil {
+		return false
+	}
+	refValue := reflect.ValueOf(value)
+	for refValue.Kind() == reflect.Ptr {
+		if refValue.IsNil() {
+			return false
+		}
+		refValue = refValue.Elem()
+	}
+	likeValue := ""
+	anyValue := refValue.Interface()
+	switch tmp := anyValue.(type) {
+	case string:
+		likeValue = tmp
+	case []byte:
+		likeValue = string(tmp)
+	}
+	if likeValue == "" {
+		return false
+	}
+	format := "%%%s%%"
+	for i := len(formats) - 1; i >= 0; i-- {
+		if formats[i] != "" {
+			format = formats[i]
+			break
+		}
+	}
+	filter.Like(column, fmt.Sprintf(format, likeValue))
 	return true
 }
 

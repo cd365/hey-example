@@ -229,7 +229,7 @@ func InsertFromQuery() {
 	t := schema.Company
 	m := t.Model()
 	filter := way.F().GreaterThanEqual(m.ID, 1)
-	get := way.Get(m.Table()).Columns(t.SelectColumn(m.NAME, m.CITY)).Where(t.Filter(filter)).Asc(m.ID).Limit(5)
+	get := way.Get(m.Table()).Select(m.NAME, m.CITY).Where(t.Filter(filter)).Asc(m.ID).Limit(5)
 	add := way.Add(m.Table()).Comment("insert query results into the table").CmderValues(get, []string{m.NAME, m.CITY})
 	way.Debugger(add)
 }
@@ -263,12 +263,12 @@ func Filter() {
 	f.Equal(m.GENDER, "male")
 	queryFilter := way.F()
 	queryFilter.Between(m.WEIGHT, 115, 130).GreaterThan(m.HEIGHT, 175)
-	f.InQuery(m.AGE, m.Get().Columns(t.SelectColumn(m.AGE)).Where(t.Filter(queryFilter)).Desc(m.ID).Limit(100))
+	f.InQuery(m.AGE, m.Get().Select(m.AGE).Where(t.Filter(queryFilter)).Desc(m.ID).Limit(100))
 	way.Debugger(f)
 
 	// ( column1, column2, column3 ) IN ( SELECT column1, column2, column3 FROM xxx [ WHERE ] [ ORDER BY ] [ LIMIT ] )
 	f = way.F()
-	f.InColsQuery([]string{m.NAME, m.AGE, m.GENDER}, m.Get().Columns(t.SelectColumn(m.NAME, m.AGE, m.GENDER)).Where(t.Filter(queryFilter)).Desc(m.ID).Limit(20))
+	f.InColsQuery([]string{m.NAME, m.AGE, m.GENDER}, m.Get().Select(m.NAME, m.AGE, m.GENDER).Where(t.Filter(queryFilter)).Desc(m.ID).Limit(20))
 	way.Debugger(f)
 }
 
