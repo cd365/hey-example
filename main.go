@@ -106,8 +106,7 @@ func initDatabase() error {
 	way = hey.NewWay(db)
 
 	cfg := way.GetCfg()
-	// Use the Helper for the corresponding database.
-	cfg.Helper = hey.NewPostgresHelper(driverName, dataSourceName)
+	cfg.Hands = hey.Postgresql()
 
 	// Record SQL log.
 	lg := logger.NewLogger(nil)
@@ -116,7 +115,7 @@ func initDatabase() error {
 	// Customize SQL execution time warning threshold.
 	cfg.WarnDuration = time.Millisecond * 200
 
-	way.SetCfg(*cfg)
+	way.SetCfg(cfg)
 
 	// Execute create table DDL.
 	if executeDdl {
@@ -136,7 +135,7 @@ func initDatabase() error {
 	// Delete specific identifiers in SQL statements.
 	cfg = way.GetCfg()
 	cfg.Replacer.DelAll()
-	way.SetCfg(*cfg)
+	way.SetCfg(cfg)
 
 	return nil
 }
