@@ -1,4 +1,4 @@
-// code template version: v3.0.0 876382ccafbc7ec905331e01d9c66afa58a11d6b 1744869629-20250417140029
+// code template version: v3.0.0 67ab087b6ba2926de886c8a05e3188b18cd6567d 1745553000-20250425115000
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -220,12 +220,12 @@ func (s *S000001Company) AddOne(custom func(add *hey.Add), create interface{}, w
 
 	add.Context(ctx)
 	add.Default(func(o *hey.Add) {
-		timestamp := o.Way().Now().Unix()
+		timestamp := o.GetWay().Now().Unix()
 		for _, v := range s.ColumnCreatedAt() {
 			o.ColumnValue(v, timestamp)
 		}
 	}).Create(create)
-	return add.Way().AddOne(
+	return add.GetWay().AddOne(
 		ctx,
 		add,
 		func(cmder hey.Cmder) hey.Cmder {
@@ -261,7 +261,7 @@ func (s *S000001Company) Insert(create interface{}, ways ...*hey.Way) (int64, er
 	return s.Add(ways...).
 		Context(ctx).
 		Default(func(o *hey.Add) {
-			timestamp := o.Way().Now().Unix()
+			timestamp := o.GetWay().Now().Unix()
 			for _, v := range s.ColumnCreatedAt() {
 				o.ColumnValue(v, timestamp)
 			}
@@ -296,7 +296,7 @@ func (s *S000001Company) Update(update func(f hey.Filter, u *hey.Mod), ways ...*
 		return 0, nil
 	}
 	modify.Default(func(o *hey.Mod) {
-		timestamp := o.Way().Now().Unix()
+		timestamp := o.GetWay().Now().Unix()
 		for _, v := range s.ColumnUpdatedAt() {
 			o.Set(v, timestamp)
 		}
@@ -675,56 +675,56 @@ type UPDATECompany struct {
 
 /* RowsScan, scan data directly, without using reflect. */
 
-func (s *S000001Company) rowsScan() *Company {
-	tmp := &Company{}
+func (s *Company) rowsScanInitializePointer() {}
 
-	return tmp
-}
-
-func (s *S000001Company) RowsScanAll(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (lists []*Company, err error) {
+func (s *S000001Company) RowsScanAll(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) ([]*Company, error) {
 	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
 	if custom != nil {
 		custom(get)
 	}
 	get.Select(s.columnSlice...)
-	lists = make([]*Company, 0, 1<<5)
-	if err = get.Query(func(rows *sql.Rows) (err error) {
-		for rows.Next() {
-			tmp := s.rowsScan()
-			if err = rows.Scan(
-				&tmp.Id,
-				&tmp.Pid,
-				&tmp.Name,
-				&tmp.Country,
-				&tmp.City,
-				&tmp.Address,
-				&tmp.Logo,
-				&tmp.State,
-				&tmp.Remark,
-				&tmp.CreatedAt,
-				&tmp.UpdatedAt,
-				&tmp.DeletedAt,
-			); err != nil {
-				return err
-			}
-			lists = append(lists, tmp)
-		}
-		return nil
-	}); err != nil {
-		return nil, err
-	}
-	return lists, nil
+	return hey.RowsScanStructAllCmder[Company](get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
+		tmp.rowsScanInitializePointer()
+		return rows.Scan(
+			&tmp.Id,
+			&tmp.Pid,
+			&tmp.Name,
+			&tmp.Country,
+			&tmp.City,
+			&tmp.Address,
+			&tmp.Logo,
+			&tmp.State,
+			&tmp.Remark,
+			&tmp.CreatedAt,
+			&tmp.UpdatedAt,
+			&tmp.DeletedAt,
+		)
+	}, get)
 }
 
 func (s *S000001Company) RowsScanOne(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (*Company, error) {
-	lists, err := s.RowsScanAll(where, custom, ways...)
-	if err != nil {
-		return nil, err
+	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
+	if custom != nil {
+		custom(get)
 	}
-	if len(lists) == 0 {
-		return nil, hey.RecordDoesNotExists
-	}
-	return lists[0], nil
+	get.Select(s.columnSlice...).Limit(1)
+	return hey.RowsScanStructOneCmder[Company](get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
+		tmp.rowsScanInitializePointer()
+		return rows.Scan(
+			&tmp.Id,
+			&tmp.Pid,
+			&tmp.Name,
+			&tmp.Country,
+			&tmp.City,
+			&tmp.Address,
+			&tmp.Logo,
+			&tmp.State,
+			&tmp.Remark,
+			&tmp.CreatedAt,
+			&tmp.UpdatedAt,
+			&tmp.DeletedAt,
+		)
+	}, get)
 }
 
 func (s *S000001Company) RowsScanAllMap(where hey.Filter, makeMapKey func(v *Company) string, custom func(get *hey.Get), ways ...*hey.Way) (map[string]*Company, []*Company, error) {

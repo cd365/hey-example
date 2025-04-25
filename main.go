@@ -91,7 +91,7 @@ COMMENT ON COLUMN employee.deleted_at IS 'deleted_at';`
 
 func initDatabase() error {
 	driverName := "postgres"
-	dataSourceName := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=disable", "postgres", "postgres", "hey")
+	dataSourceName := fmt.Sprintf("postgres://%s:%s@localhost:5432/%s?sslmode=disable", "postgres", "postgres", "example")
 	db, err := sql.Open(driverName, dataSourceName)
 	if err != nil {
 		return err

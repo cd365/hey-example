@@ -1,4 +1,4 @@
-// code template version: v3.0.0 876382ccafbc7ec905331e01d9c66afa58a11d6b 1744869629-20250417140029
+// code template version: v3.0.0 67ab087b6ba2926de886c8a05e3188b18cd6567d 1745553000-20250425115000
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package biz
