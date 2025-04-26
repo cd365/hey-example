@@ -1,4 +1,4 @@
-// code template version: v3.0.0 67ab087b6ba2926de886c8a05e3188b18cd6567d 1745553000-20250425115000
+// code template version: v3.0.0 9f0192f0b16a212ca016eee6a55a91ce93fe5815 1745636319-20250426105839
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -230,7 +230,7 @@ func (s *S000001Company) AddOne(custom func(add *hey.Add), create interface{}, w
 		add,
 		func(cmder hey.Cmder) hey.Cmder {
 			prepare, args := cmder.Cmd()
-			return hey.NewCmder(hey.ConcatString(prepare, fmt.Sprintf(" RETURNING %s", s.way.NameReplace(s.PrimaryKey()))), args)
+			return hey.NewCmder(hey.ConcatString(prepare, fmt.Sprintf(" RETURNING %s", s.way.Replace(s.PrimaryKey()))), args)
 		},
 		func(ctx context.Context, stmt *hey.Stmt, args []interface{}) (id int64, err error) {
 			err = stmt.QueryRowContext(ctx, func(rows *sql.Row) error { return rows.Scan(&id) }, args...)
@@ -604,8 +604,8 @@ func (s *S000001Company) initial() *S000001Company {
 		s.DELETED_AT: 11, // deleted_at
 	}
 
-	replacer := s.way.GetCfg().Replacer
-	if replacer != nil {
+	replace := s.way.GetCfg().Manual.Replace
+	if replace != nil {
 
 		table := s.table
 		newest := table
@@ -613,19 +613,19 @@ func (s *S000001Company) initial() *S000001Company {
 			newest = strings.ReplaceAll(newest, hey.SqlPoint, fmt.Sprintf("%s%s%s", s.border, hey.SqlPoint, s.border))
 		}
 		newest = fmt.Sprintf("%s%s%s", s.border, newest, s.border)
-		replacer.Add(table, newest)
-		replacer.Add(s.ID, `"id"`)                 // id
-		replacer.Add(s.PID, `"pid"`)               // pid
-		replacer.Add(s.NAME, `"name"`)             // name
-		replacer.Add(s.COUNTRY, `"country"`)       // country
-		replacer.Add(s.CITY, `"city"`)             // city
-		replacer.Add(s.ADDRESS, `"address"`)       // address
-		replacer.Add(s.LOGO, `"logo"`)             // logo
-		replacer.Add(s.STATE, `"state"`)           // state
-		replacer.Add(s.REMARK, `"remark"`)         // remark
-		replacer.Add(s.CREATED_AT, `"created_at"`) // created_at
-		replacer.Add(s.UPDATED_AT, `"updated_at"`) // updated_at
-		replacer.Add(s.DELETED_AT, `"deleted_at"`) // deleted_at
+		replace.Set(table, newest)
+		replace.Set(s.ID, `"id"`)                 // id
+		replace.Set(s.PID, `"pid"`)               // pid
+		replace.Set(s.NAME, `"name"`)             // name
+		replace.Set(s.COUNTRY, `"country"`)       // country
+		replace.Set(s.CITY, `"city"`)             // city
+		replace.Set(s.ADDRESS, `"address"`)       // address
+		replace.Set(s.LOGO, `"logo"`)             // logo
+		replace.Set(s.STATE, `"state"`)           // state
+		replace.Set(s.REMARK, `"remark"`)         // remark
+		replace.Set(s.CREATED_AT, `"created_at"`) // created_at
+		replace.Set(s.UPDATED_AT, `"updated_at"`) // updated_at
+		replace.Set(s.DELETED_AT, `"deleted_at"`) // deleted_at
 
 	}
 	return s

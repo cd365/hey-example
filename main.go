@@ -106,7 +106,8 @@ func initDatabase() error {
 	way = hey.NewWay(db)
 
 	cfg := way.GetCfg()
-	cfg.Hands = hey.Postgresql()
+	cfg.Manual = hey.Postgresql()
+	cfg.Manual.Replace = hey.NewReplace()
 
 	// Record SQL log.
 	lg := logger.NewLogger(nil)
@@ -134,7 +135,7 @@ func initDatabase() error {
 
 	// Delete specific identifiers in SQL statements.
 	cfg = way.GetCfg()
-	cfg.Replacer.DelAll()
+	cfg.Manual.Replace = nil
 	way.SetCfg(cfg)
 
 	return nil

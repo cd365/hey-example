@@ -1,4 +1,4 @@
-// code template version: v3.0.0 67ab087b6ba2926de886c8a05e3188b18cd6567d 1745553000-20250425115000
+// code template version: v3.0.0 9f0192f0b16a212ca016eee6a55a91ce93fe5815 1745636319-20250426105839
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -238,7 +238,7 @@ func (s *S000001Employee) AddOne(custom func(add *hey.Add), create interface{}, 
 		add,
 		func(cmder hey.Cmder) hey.Cmder {
 			prepare, args := cmder.Cmd()
-			return hey.NewCmder(hey.ConcatString(prepare, fmt.Sprintf(" RETURNING %s", s.way.NameReplace(s.PrimaryKey()))), args)
+			return hey.NewCmder(hey.ConcatString(prepare, fmt.Sprintf(" RETURNING %s", s.way.Replace(s.PrimaryKey()))), args)
 		},
 		func(ctx context.Context, stmt *hey.Stmt, args []interface{}) (id int64, err error) {
 			err = stmt.QueryRowContext(ctx, func(rows *sql.Row) error { return rows.Scan(&id) }, args...)
@@ -628,8 +628,8 @@ func (s *S000001Employee) initial() *S000001Employee {
 		s.DELETED_AT: 15, // deleted_at
 	}
 
-	replacer := s.way.GetCfg().Replacer
-	if replacer != nil {
+	replace := s.way.GetCfg().Manual.Replace
+	if replace != nil {
 
 		table := s.table
 		newest := table
@@ -637,23 +637,23 @@ func (s *S000001Employee) initial() *S000001Employee {
 			newest = strings.ReplaceAll(newest, hey.SqlPoint, fmt.Sprintf("%s%s%s", s.border, hey.SqlPoint, s.border))
 		}
 		newest = fmt.Sprintf("%s%s%s", s.border, newest, s.border)
-		replacer.Add(table, newest)
-		replacer.Add(s.ID, `"id"`)                 // id
-		replacer.Add(s.COMPANY_ID, `"company_id"`) // company_id
-		replacer.Add(s.NAME, `"name"`)             // name
-		replacer.Add(s.AGE, `"age"`)               // age
-		replacer.Add(s.BIRTHDAY, `"birthday"`)     // birthday
-		replacer.Add(s.GENDER, `"gender"`)         // gender unknown OR male OR female
-		replacer.Add(s.HEIGHT, `"height"`)         // height unit: cm
-		replacer.Add(s.WEIGHT, `"weight"`)         // weight unit: kg
-		replacer.Add(s.HEALTH, `"health"`)         // health value
-		replacer.Add(s.SALARY, `"salary"`)         // salary
-		replacer.Add(s.DEPARTMENT, `"department"`) // department
-		replacer.Add(s.STATE, `"state"`)           // state
-		replacer.Add(s.REMARK, `"remark"`)         // remark
-		replacer.Add(s.CREATED_AT, `"created_at"`) // created_at
-		replacer.Add(s.UPDATED_AT, `"updated_at"`) // updated_at
-		replacer.Add(s.DELETED_AT, `"deleted_at"`) // deleted_at
+		replace.Set(table, newest)
+		replace.Set(s.ID, `"id"`)                 // id
+		replace.Set(s.COMPANY_ID, `"company_id"`) // company_id
+		replace.Set(s.NAME, `"name"`)             // name
+		replace.Set(s.AGE, `"age"`)               // age
+		replace.Set(s.BIRTHDAY, `"birthday"`)     // birthday
+		replace.Set(s.GENDER, `"gender"`)         // gender unknown OR male OR female
+		replace.Set(s.HEIGHT, `"height"`)         // height unit: cm
+		replace.Set(s.WEIGHT, `"weight"`)         // weight unit: kg
+		replace.Set(s.HEALTH, `"health"`)         // health value
+		replace.Set(s.SALARY, `"salary"`)         // salary
+		replace.Set(s.DEPARTMENT, `"department"`) // department
+		replace.Set(s.STATE, `"state"`)           // state
+		replace.Set(s.REMARK, `"remark"`)         // remark
+		replace.Set(s.CREATED_AT, `"created_at"`) // created_at
+		replace.Set(s.UPDATED_AT, `"updated_at"`) // updated_at
+		replace.Set(s.DELETED_AT, `"deleted_at"`) // deleted_at
 
 	}
 	return s
