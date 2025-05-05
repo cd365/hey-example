@@ -1,4 +1,4 @@
-// code template version: v3.0.0 9f0192f0b16a212ca016eee6a55a91ce93fe5815 1745636319-20250426105839
+// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -233,18 +233,14 @@ func (s *S000001Employee) AddOne(custom func(add *hey.Add), create interface{}, 
 			o.ColumnValue(v, timestamp)
 		}
 	}).Create(create)
-	return add.GetWay().AddOne(
-		ctx,
-		add,
-		func(cmder hey.Cmder) hey.Cmder {
-			prepare, args := cmder.Cmd()
-			return hey.NewCmder(hey.ConcatString(prepare, fmt.Sprintf(" RETURNING %s", s.way.Replace(s.PrimaryKey()))), args)
-		},
-		func(ctx context.Context, stmt *hey.Stmt, args []interface{}) (id int64, err error) {
+	return add.AddOne(func(add hey.AddOneReturnSequenceValue) {
+		add.Adjust(func(prepare string, args []interface{}) (string, []interface{}) {
+			return hey.ConcatString(prepare, fmt.Sprintf(" RETURNING %s", s.way.Replace(s.PrimaryKey()))), args
+		}).Execute(func(ctx context.Context, stmt *hey.Stmt, args []interface{}) (id int64, err error) {
 			err = stmt.QueryRowContext(ctx, func(rows *sql.Row) error { return rows.Scan(&id) }, args...)
 			return
-		},
-	)
+		})
+	})
 
 }
 
@@ -1153,7 +1149,7 @@ func (s *S000001Employee) NotFoundInsert(filter func(f hey.Filter, g *hey.Get), 
 }
 
 // Backup Constructing a backup statement.
-func (s *S000001Employee) Backup(limit int64, backup func(cmder hey.Cmder) (affectedRows int64, err error)) error {
+func (s *S000001Employee) Backup(limit int64, custom func(get *hey.Get), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
 	if backup == nil {
 		return nil
 	}
@@ -1165,6 +1161,9 @@ func (s *S000001Employee) Backup(limit int64, backup func(cmder hey.Cmder) (affe
 		lists, err = s.RowsScanAll(
 			s.Filter().GreaterThan(s.PrimaryKey(), idMin),
 			func(get *hey.Get) {
+				if custom != nil {
+					custom(get)
+				}
 				get.Asc(s.PrimaryKey()).Limit(limit)
 			},
 		)
@@ -1175,7 +1174,7 @@ func (s *S000001Employee) Backup(limit int64, backup func(cmder hey.Cmder) (affe
 		if length == 0 {
 			return nil
 		}
-		affectedRows, err = backup(s.way.Add(s.table).Create(lists))
+		affectedRows, err = backup(s.way.Add(s.table), lists)
 		if err != nil {
 			return err
 		}
@@ -1184,6 +1183,25 @@ func (s *S000001Employee) Backup(limit int64, backup func(cmder hey.Cmder) (affe
 		}
 		idMin = lists[length-1].Id
 	}
+}
+
+// Truncate Clear all data in the table.
+func (s *S000001Employee) Truncate(ctx context.Context) (int64, error) {
+	table := s.way.Replace(s.table)
+	if ctx == nil {
+		ctx = context.Background()
+	} else {
+		if name := ctx.Value("table"); name != nil {
+			if tmp, ok := name.(string); ok && name != hey.EmptyString {
+				table = s.way.Replace(tmp)
+			}
+		}
+	}
+	result, err := s.way.GetDatabase().ExecContext(ctx, hey.ConcatString("TRUNCATE", hey.SqlSpace, "TABLE", hey.SqlSpace, table))
+	if err != nil {
+		return 0, err
+	}
+	return result.RowsAffected()
 }
 
 // ValueStruct struct value

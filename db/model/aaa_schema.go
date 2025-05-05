@@ -1,14 +1,19 @@
-// code template version: v3.0.0 9f0192f0b16a212ca016eee6a55a91ce93fe5815 1745636319-20250426105839
+// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
 
 import (
 	"context"
+	_ "embed"
 	"github.com/cd365/hey-example/db/abc"
 	"github.com/cd365/hey/v3"
+	"sync"
 	"time"
 )
+
+//go:embed aaa_table_create.sql
+var tableCreateSql []byte
 
 type Database struct {
 	schemaMap   map[string]abc.Table
@@ -62,4 +67,48 @@ func (s *Database) TableSlice() []string {
 func (s *Database) TableExists(table string) bool {
 	_, ok := s.schemaMap[table]
 	return ok
+}
+
+func (s *Database) TableCreate() []byte {
+	return tableCreateSql
+}
+
+// CopyDatabase Copy all current table objects and their data to the target database.
+func (s *Database) CopyDatabase(dst *hey.Way) error {
+	_, resultErr := dst.GetDatabase().Exec(string(s.TableCreate()))
+	if resultErr != nil {
+		return resultErr
+	}
+	wg := &sync.WaitGroup{}
+	once := &sync.Once{}
+	callOnce := func(err error) {
+		if err != nil {
+			resultErr = err
+		}
+	}
+	backup := func(table abc.Table) {
+		defer wg.Done()
+		if tmp, ok := table.(abc.DatabaseManager); ok {
+			// TRUNCATE TABLE
+			if _, err := dst.Exec(hey.ConcatString("TRUNCATE", hey.SqlSpace, "TABLE", hey.SqlSpace, dst.Replace(table.Table()))); err != nil {
+				once.Do(func() { callOnce(err) })
+				return
+			}
+			// WRITE DATA
+			if err := tmp.Backup(1000, nil, func(add *hey.Add, creates interface{}) (affectedRows int64, err error) {
+				return dst.Add(table.Table()).Create(creates).Add()
+			}); err != nil {
+				once.Do(func() { callOnce(err) })
+				return
+			}
+		}
+	}
+	for _, name := range s.schemaSlice {
+		if table, exists := s.schemaMap[name]; exists && table != nil {
+			wg.Add(1)
+			backup(table)
+		}
+	}
+	wg.Wait()
+	return resultErr
 }

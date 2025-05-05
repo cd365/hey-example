@@ -1,21 +1,22 @@
-// code template version: v3.0.0 9f0192f0b16a212ca016eee6a55a91ce93fe5815 1745636319-20250426105839
+// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package biz
 
 import (
+	"context"
+	"database/sql"
 	"github.com/cd365/hey-example/db/model"
 	"github.com/cd365/hey/v3"
 )
 
 type Employee interface {
+	Way(ways ...*hey.Way) *hey.Way
+	F(filters ...hey.Filter) hey.Filter
 	Model() *model.S000001Employee
 	Debugger(cmder hey.Cmder) Employee
-	Filter(filters ...hey.Filter) func(f hey.Filter)
-	SelectColumn(columns ...string) func(queryColumns hey.QueryColumns)
-	SelectColumnCmder(custom func(f hey.Filter, g *hey.Get), columns ...string) hey.Cmder
 	SelectTableColumn(table *hey.TableColumn, columns ...string) []string
-	Transaction(way *hey.Way, transaction func(tx *hey.Way) error) error
+	Transaction(way *hey.Way, transaction func(tx *hey.Way) error, opts ...*sql.TxOptions) error
 	Insert(way *hey.Way, insert interface{}, custom ...func(add *hey.Add)) (int64, error)
 	InsertOne(way *hey.Way, insert interface{}, custom ...func(add *hey.Add)) (int64, error)
 	Delete(way *hey.Way, where func(f hey.Filter)) (int64, error)
@@ -42,6 +43,14 @@ func NewEmployee(table *model.S000001Employee) Employee {
 	}
 }
 
+func (s *employee) Way(ways ...*hey.Way) *hey.Way {
+	return s.table.Way(ways...)
+}
+
+func (s *employee) F(filters ...hey.Filter) hey.Filter {
+	return s.Way().F(filters...)
+}
+
 func (s *employee) Model() *model.S000001Employee {
 	return s.table
 }
@@ -51,24 +60,6 @@ func (s *employee) Debugger(cmder hey.Cmder) Employee {
 	return s
 }
 
-func (s *employee) Filter(filters ...hey.Filter) func(f hey.Filter) {
-	return func(f hey.Filter) { f.Use(filters...) }
-}
-
-func (s *employee) SelectColumn(columns ...string) func(queryColumns hey.QueryColumns) {
-	return func(queryColumns hey.QueryColumns) { queryColumns.AddAll(columns...) }
-}
-
-func (s *employee) SelectColumnCmder(custom func(f hey.Filter, g *hey.Get), columns ...string) hey.Cmder {
-	m := s.Model()
-	where := m.Filter()
-	result := m.Get().Select(columns...)
-	if custom != nil {
-		custom(where, result)
-	}
-	return result.Where(func(f hey.Filter) { f.Use(where) })
-}
-
 func (s *employee) SelectTableColumn(table *hey.TableColumn, columns ...string) []string {
 	if table == nil {
 		table = s.table.Way().T()
@@ -76,11 +67,17 @@ func (s *employee) SelectTableColumn(table *hey.TableColumn, columns ...string) 
 	return table.ColumnAll(columns...)
 }
 
-func (s *employee) Transaction(way *hey.Way, transaction func(tx *hey.Way) error) error {
+func (s *employee) Transaction(way *hey.Way, transaction func(tx *hey.Way) error, opts ...*sql.TxOptions) error {
 	if transaction == nil {
 		return nil
 	}
-	return s.table.Way(way).Transaction(nil, transaction)
+	way = s.table.Way(way)
+	if way.IsInTransaction() {
+		return way.Transaction(nil, transaction)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), way.GetCfg().TransactionMaxDuration)
+	defer cancel()
+	return way.Transaction(ctx, transaction, opts...)
 }
 
 func (s *employee) Insert(way *hey.Way, insert interface{}, custom ...func(add *hey.Add)) (int64, error) {
@@ -170,7 +167,7 @@ func (s *employee) Upsert(way *hey.Way, where func(f hey.Filter), update func(u 
 	if where != nil {
 		where(filter)
 	}
-	exists, err := s.Exists(way, s.Filter(filter), nil)
+	exists, err := s.Exists(way, func(f hey.Filter) { f.Use(filter) }, nil)
 	if err != nil {
 		return 0, err
 	}
@@ -196,7 +193,7 @@ func (s *employee) UpsertOne(way *hey.Way, where func(f hey.Filter), update func
 	if where != nil {
 		where(filter)
 	}
-	exists, err := s.Exists(way, s.Filter(filter), nil)
+	exists, err := s.Exists(way, func(f hey.Filter) { f.Use(filter) }, nil)
 	if err != nil {
 		return 0, err
 	}

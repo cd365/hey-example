@@ -1,4 +1,4 @@
-// code template version: v3.0.0 9f0192f0b16a212ca016eee6a55a91ce93fe5815 1745636319-20250426105839
+// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
 // TEMPLATE CODE DO NOT EDIT IT.
 
 /*
@@ -128,6 +128,8 @@ type Table interface {
 	PrimaryKeySelectCount(primaryKeys interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error)
 	PrimaryKeyExists(primaryKey interface{}, ways ...*hey.Way) (bool, error)
 
+	Truncate(ctx context.Context) (int64, error)
+
 	ValueStruct() interface{}
 	ValueStructPtr() interface{}
 	ValueSliceStruct(capacities ...int) interface{}
@@ -135,7 +137,7 @@ type Table interface {
 }
 
 type DatabaseManager interface {
-	Backup(limit int64, backup func(cmder hey.Cmder) (affectedRows int64, err error)) error
+	Backup(limit int64, custom func(get *hey.Get), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error
 }
 
 type BASIC struct {
