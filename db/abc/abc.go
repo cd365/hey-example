@@ -1,4 +1,4 @@
-// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
+// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
 // TEMPLATE CODE DO NOT EDIT IT.
 
 /*
@@ -64,12 +64,12 @@ func Way(way *hey.Way, ways ...*hey.Way) *hey.Way {
 	return way
 }
 
-// PrimaryKey Used to obtain the primary key column value of the database table.
+// PrimaryKey Used to get the primary key column value of the database table.
 type PrimaryKey interface {
 	PrimaryKey() interface{}
 }
 
-type Table interface {
+type DatabaseTable interface {
 	Basic() *BASIC
 	Table() string
 	Comment() string
@@ -94,39 +94,40 @@ type Table interface {
 	Border() string
 	Debugger(cmder hey.Cmder)
 
-	AddOne(custom func(add *hey.Add), create interface{}, ways ...*hey.Way) (int64, error)
-	Insert(create interface{}, ways ...*hey.Way) (int64, error)
-	Delete(where hey.Filter, ways ...*hey.Way) (int64, error)
-	Update(update func(f hey.Filter, u *hey.Mod), ways ...*hey.Way) (int64, error)
-	InsertSelect(column []string, get *hey.Get, ways ...*hey.Way) (int64, error)
-	SelectCount(where hey.Filter, ways ...*hey.Way) (int64, error)
-	SelectQuery(where hey.Filter, custom func(get *hey.Get), query func(rows *sql.Rows) error, ways ...*hey.Way) error
-	SelectGet(where hey.Filter, custom func(get *hey.Get), receive interface{}, ways ...*hey.Way) error
-	SelectExists(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (bool, error)
-	SelectCountGet(where hey.Filter, custom func(get *hey.Get), receive interface{}, ways ...*hey.Way) (int64, error)
-	DeleteByColumn(column string, values interface{}, filters ...hey.Filter) (int64, error)
-	UpdateByColumn(column string, values interface{}, modify interface{}, filters ...hey.Filter) (int64, error)
-	SelectExistsByColumn(column string, values interface{}, customs ...func(f hey.Filter, g *hey.Get)) (bool, error)
-	SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(f hey.Filter, g *hey.Get)) error
-	DeleteInsert(where hey.Filter, create interface{}, ways ...*hey.Way) (deleteResult int64, insertResult int64, err error)
+	AddOne(create interface{}, custom func(add *hey.Add)) (int64, error)
+	Insert(create interface{}, custom func(add *hey.Add)) (int64, error)
+	Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error)
+	Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error)
+	InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error)
+	SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error)
+	SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error
+	SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error
+	SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error)
+	SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error)
+	DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error)
+	UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error)
+	SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error)
+	SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error
+	DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error)
 
 	PrimaryKey() string
-	PrimaryKeyUpdate(primaryKey PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyHidden(primaryKey PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyDelete(primaryKey PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyUpsert(primaryKey PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, pks ...PrimaryKey) (int64, error)
-	PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, pks ...PrimaryKey) (int64, error)
-	PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, pks ...PrimaryKey) (int64, error)
-	PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, pks ...PrimaryKey) (int64, error)
+	PrimaryKeyUpdate(primaryKey PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error)
+	PrimaryKeyHidden(primaryKey PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error)
+	PrimaryKeyDelete(primaryKey PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error)
+	PrimaryKeyUpsert(primaryKey PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error)
+	PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []PrimaryKey) (int64, error)
+	PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []PrimaryKey) (int64, error)
+	PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []PrimaryKey) (int64, error)
+	PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []PrimaryKey) (int64, error)
 	PrimaryKeyEqual(value interface{}) hey.Filter
 	PrimaryKeyIn(values ...interface{}) hey.Filter
-	PrimaryKeyUpdateMap(primaryKey interface{}, modify map[string]interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyUpsertMap(primaryKey interface{}, upsert map[string]interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyDeleteFilter(primaryKeys interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeySelectExists(primaryKey interface{}, filter hey.Filter, ways ...*hey.Way) (bool, error)
-	PrimaryKeySelectCount(primaryKeys interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error)
-	PrimaryKeyExists(primaryKey interface{}, ways ...*hey.Way) (bool, error)
+	PrimaryKeyUpdateMap(primaryKey interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error)
+	PrimaryKeyUpsertMap(primaryKey interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error)
+	PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error)
+	PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error)
+	PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error)
+
+	NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error)
 
 	Truncate(ctx context.Context) (int64, error)
 
@@ -136,8 +137,8 @@ type Table interface {
 	ValueSliceStructPtr(capacities ...int) interface{}
 }
 
-type DatabaseManager interface {
-	Backup(limit int64, custom func(get *hey.Get), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error
+type DatabaseBackup interface {
+	Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error
 }
 
 type BASIC struct {
@@ -518,7 +519,7 @@ func (s SelectLimitOffset) GetOffset() int64 {
 	return 0
 }
 
-// Batches Batch process a set of data.
+// Batches Batch processes a set of data.
 type Batches[V interface{}] struct {
 	lists []V
 	mutex *sync.Mutex

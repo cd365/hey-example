@@ -1,4 +1,4 @@
-// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
+// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -207,11 +207,11 @@ func (s *S000001Company) Debugger(cmder hey.Cmder) {
 }
 
 // AddOne Insert a record and return the auto-increment id.
-func (s *S000001Company) AddOne(custom func(add *hey.Add), create interface{}, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) AddOne(create interface{}, custom func(add *hey.Add)) (int64, error) {
 	if create == nil {
 		return 0, nil
 	}
-	add := s.Add(ways...)
+	add := s.Add()
 	if custom != nil {
 		custom(add)
 	}
@@ -237,11 +237,10 @@ func (s *S000001Company) AddOne(custom func(add *hey.Add), create interface{}, w
 }
 
 // Insert SQL INSERT.
-func (s *S000001Company) Insert(create interface{}, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) Insert(create interface{}, custom func(add *hey.Add)) (int64, error) {
 	if create == nil {
 		return 0, nil
 	}
-
 	typeOf := reflect.TypeOf(create)
 	kind := typeOf.Kind()
 	for kind == reflect.Ptr {
@@ -249,45 +248,47 @@ func (s *S000001Company) Insert(create interface{}, ways ...*hey.Way) (int64, er
 		kind = typeOf.Kind()
 	}
 	if kind == reflect.Map || kind == reflect.Struct {
-		return s.AddOne(nil, create)
+		return s.AddOne(create, custom)
 	}
-
+	add := s.Add()
+	if custom != nil {
+		custom(add)
+	}
 	ctx, cancel := context.WithTimeout(s.basic.Ctx, s.basic.SqlExecuteMaxDuration)
 	defer cancel()
-	return s.Add(ways...).
-		Context(ctx).
+	return add.Context(ctx).
 		Default(func(o *hey.Add) {
 			timestamp := o.GetWay().Now().Unix()
 			for _, v := range s.ColumnCreatedAt() {
 				o.ColumnValue(v, timestamp)
 			}
-		}).
-		Create(create).
-		Add()
+		}).Create(create).Add()
 }
 
 // Delete SQL DELETE.
-func (s *S000001Company) Delete(where hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+	if custom == nil {
+		return 0, nil
+	}
+	remove := s.Del()
+	where := s.Filter()
+	custom(remove, where)
 	if where.IsEmpty() {
 		return 0, nil
 	}
 	ctx, cancel := context.WithTimeout(s.basic.Ctx, s.basic.SqlExecuteMaxDuration)
 	defer cancel()
-	return s.Del(ways...).
-		Context(ctx).
-		Where(func(f hey.Filter) {
-			f.Use(where.Use(s.Available()))
-		}).
-		Del()
+	return remove.Context(ctx).Where(func(f hey.Filter) { f.Use(where) }).Del()
 }
 
 // Update SQL UPDATE.
-func (s *S000001Company) Update(update func(f hey.Filter, u *hey.Mod), ways ...*hey.Way) (int64, error) {
-	filter := s.Filter()
-	modify := s.Mod(ways...)
-	if update != nil {
-		update(filter, modify)
+func (s *S000001Company) Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+	if update == nil {
+		return 0, nil
 	}
+	filter := s.Filter()
+	modify := s.Mod()
+	update(modify, filter)
 	if filter.IsEmpty() {
 		return 0, nil
 	}
@@ -299,33 +300,37 @@ func (s *S000001Company) Update(update func(f hey.Filter, u *hey.Mod), ways ...*
 	})
 	ctx, cancel := context.WithTimeout(s.basic.Ctx, s.basic.SqlExecuteMaxDuration)
 	defer cancel()
-	return modify.Context(ctx).Where(func(f hey.Filter) {
-		f.Use(filter.Use(s.Available()))
-	}).Mod()
+	return modify.Context(ctx).Where(func(f hey.Filter) { f.Use(filter) }).Mod()
 }
 
-// InsertSelect SQL INSERT SELECT.
-func (s *S000001Company) InsertSelect(columns []string, get *hey.Get, ways ...*hey.Way) (int64, error) {
+// InsertSelect SQL INSERT and SELECT.
+func (s *S000001Company) InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error) {
 	if len(columns) == 0 || get == nil {
 		return 0, nil
 	}
 	ctx, cancel := context.WithTimeout(s.basic.Ctx, s.basic.SqlExecuteMaxDuration)
 	defer cancel()
-	return s.Add(ways...).Context(ctx).CmderValues(get, columns).Add()
+	return s.Add().SetWay(way).Context(ctx).CmderValues(get, columns).Add()
 }
 
 // SelectCount SQL SELECT COUNT.
-func (s *S000001Company) SelectCount(where hey.Filter, ways ...*hey.Way) (int64, error) {
-	return s.Get(ways...).Select(s.columnSlice[0]).Where(func(f hey.Filter) { f.Use(where) }).Count()
+func (s *S000001Company) SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error) {
+	get := s.Get()
+	where := s.Filter()
+	if custom != nil {
+		custom(get, where)
+	}
+	return get.Select(s.columnSlice[0]).Where(func(f hey.Filter) { f.Use(where) }).Count()
 }
 
 // SelectQuery SQL SELECT.
-func (s *S000001Company) SelectQuery(where hey.Filter, custom func(get *hey.Get), query func(rows *sql.Rows) error, ways ...*hey.Way) error {
-	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
+func (s *S000001Company) SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error {
+	get := s.Get()
+	where := s.Filter()
 	if custom != nil {
-		custom(get)
+		custom(get, where)
 	}
-	return get.Query(query)
+	return get.Where(func(f hey.Filter) { f.Use(where) }).Query(query)
 }
 
 // EmptySlice Initialize an empty slice.
@@ -334,36 +339,32 @@ func (s *S000001Company) EmptySlice() []*Company {
 }
 
 // SelectGet SQL SELECT.
-func (s *S000001Company) SelectGet(where hey.Filter, custom func(get *hey.Get), receive interface{}, ways ...*hey.Way) error {
-	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
+func (s *S000001Company) SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error {
+	get := s.Get()
+	where := s.Filter()
 	if custom != nil {
-		custom(get)
+		custom(get, where)
 	}
-	return get.Get(receive)
+	return get.Where(func(f hey.Filter) { f.Use(where) }).Get(receive)
 }
 
 // SelectAll SQL SELECT ALL.
-func (s *S000001Company) SelectAll(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) ([]*Company, error) {
-	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
-	if custom != nil {
-		custom(get)
-	}
-	all := s.EmptySlice()
-	err := get.Get(&all)
-	if err != nil {
+func (s *S000001Company) SelectAll(custom func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+	lists := s.EmptySlice()
+	if err := s.SelectGet(custom, &lists); err != nil {
 		return nil, err
 	}
-	return all, nil
+	return lists, nil
 }
 
 // SelectOne SQL SELECT ONE.
-func (s *S000001Company) SelectOne(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (*Company, error) {
-	all, err := s.SelectAll(where, func(get *hey.Get) {
+func (s *S000001Company) SelectOne(custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+	all, err := s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		if custom != nil {
-			custom(get)
+			custom(get, where)
 		}
 		get.Limit(1)
-	}, ways...)
+	})
 	if err != nil {
 		return nil, err
 	}
@@ -374,13 +375,13 @@ func (s *S000001Company) SelectOne(where hey.Filter, custom func(get *hey.Get), 
 }
 
 // SelectExists SQL SELECT EXISTS.
-func (s *S000001Company) SelectExists(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (bool, error) {
-	exists, err := s.SelectOne(where, func(get *hey.Get) {
+func (s *S000001Company) SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error) {
+	exists, err := s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		if custom != nil {
-			custom(get)
+			custom(get, where)
 		}
 		get.Select(s.columnSlice[0])
-	}, ways...)
+	})
 	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
 	}
@@ -388,39 +389,39 @@ func (s *S000001Company) SelectExists(where hey.Filter, custom func(get *hey.Get
 }
 
 // SelectCountAll SQL SELECT COUNT + ALL.
-func (s *S000001Company) SelectCountAll(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (int64, []*Company, error) {
-	total, err := s.SelectCount(where, ways...)
+func (s *S000001Company) SelectCountAll(custom func(get *hey.Get, where hey.Filter)) (int64, []*Company, error) {
+	count, err := s.SelectCount(custom)
 	if err != nil {
 		return 0, nil, err
 	}
-	if total == 0 {
+	if count == 0 {
 		return 0, make([]*Company, 0), nil
 	}
-	all, err := s.SelectAll(where, custom, ways...)
+	all, err := s.SelectAll(custom)
 	if err != nil {
 		return 0, nil, err
 	}
-	return total, all, nil
+	return count, all, nil
 }
 
 // SelectCountGet SQL SELECT COUNT + GET.
-func (s *S000001Company) SelectCountGet(where hey.Filter, custom func(get *hey.Get), receive interface{}, ways ...*hey.Way) (int64, error) {
-	count, err := s.SelectCount(where, ways...)
+func (s *S000001Company) SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error) {
+	count, err := s.SelectCount(custom)
 	if err != nil {
 		return 0, err
 	}
 	if count == 0 {
 		return 0, nil
 	}
-	if err = s.SelectGet(where, custom, receive, ways...); err != nil {
+	if err = s.SelectGet(custom, receive); err != nil {
 		return 0, err
 	}
 	return count, nil
 }
 
 // SelectAllMap Make map[string]*Company
-func (s *S000001Company) SelectAllMap(where hey.Filter, makeMapKey func(v *Company) string, custom func(get *hey.Get), ways ...*hey.Way) (map[string]*Company, []*Company, error) {
-	all, err := s.SelectAll(where, custom, ways...)
+func (s *S000001Company) SelectAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) string) (map[string]*Company, []*Company, error) {
+	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -432,8 +433,8 @@ func (s *S000001Company) SelectAllMap(where hey.Filter, makeMapKey func(v *Compa
 }
 
 // SelectAllMapInt Make map[int]*Company
-func (s *S000001Company) SelectAllMapInt(where hey.Filter, makeMapKey func(v *Company) int, custom func(get *hey.Get), ways ...*hey.Way) (map[int]*Company, []*Company, error) {
-	all, err := s.SelectAll(where, custom, ways...)
+func (s *S000001Company) SelectAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int) (map[int]*Company, []*Company, error) {
+	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -445,8 +446,8 @@ func (s *S000001Company) SelectAllMapInt(where hey.Filter, makeMapKey func(v *Co
 }
 
 // SelectAllMapInt64 Make map[int64]*Company
-func (s *S000001Company) SelectAllMapInt64(where hey.Filter, makeMapKey func(v *Company) int64, custom func(get *hey.Get), ways ...*hey.Way) (map[int64]*Company, []*Company, error) {
-	all, err := s.SelectAll(where, custom, ways...)
+func (s *S000001Company) SelectAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int64) (map[int64]*Company, []*Company, error) {
+	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -457,68 +458,76 @@ func (s *S000001Company) SelectAllMapInt64(where hey.Filter, makeMapKey func(v *
 	return allMap, all, nil
 }
 
-// DeleteByColumn Delete by column values. Additional conditions can be added in the filters. no transaction support.
-func (s *S000001Company) DeleteByColumn(column string, values interface{}, filters ...hey.Filter) (int64, error) {
-	return s.Delete(s.Filter().In(column, values).Use(filters...))
+// DeleteByColumn Delete by column values. Additional conditions can be added in the filters. No transaction support.
+func (s *S000001Company) DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+	return s.Delete(func(del *hey.Del, where hey.Filter) {
+		where.In(column, values)
+		if custom != nil {
+			custom(del, where)
+		}
+	})
 }
 
-// UpdateByColumn Update by column values. Additional conditions can be added in the filters. no transaction support.
-func (s *S000001Company) UpdateByColumn(column string, values interface{}, update interface{}, filters ...hey.Filter) (int64, error) {
+// UpdateByColumn Update by column values. Additional conditions can be added in the filters. No transaction support.
+func (s *S000001Company) UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if update == nil {
 		return 0, nil
 	}
-	return s.Update(func(f hey.Filter, u *hey.Mod) {
-		f.In(column, values).Use(filters...)
-		u.Update(update)
+	return s.Update(func(mod *hey.Mod, where hey.Filter) {
+		where.In(column, values)
+		if custom != nil {
+			custom(mod, where)
+		}
+		mod.Update(update)
 	})
 }
 
-// SelectAllByColumn Select all by column values. no transaction support.
-func (s *S000001Company) SelectAllByColumn(column string, values interface{}, customs ...func(f hey.Filter, g *hey.Get)) ([]*Company, error) {
-	where := s.Filter().In(column, values)
-	return s.SelectAll(where, func(get *hey.Get) {
+// SelectAllByColumn Select all by column values. No transaction support.
+func (s *S000001Company) SelectAllByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+	return s.SelectAll(func(get *hey.Get, where hey.Filter) {
+		where.In(column, values)
 		for _, custom := range customs {
 			if custom != nil {
-				custom(where, get)
+				custom(get, where)
 				break
 			}
 		}
 	})
 }
 
-// SelectOneByColumn Select one by column values. no transaction support.
-func (s *S000001Company) SelectOneByColumn(column string, values interface{}, customs ...func(f hey.Filter, g *hey.Get)) (*Company, error) {
-	where := s.Filter().In(column, values)
-	return s.SelectOne(where, func(get *hey.Get) {
+// SelectOneByColumn Select one by column values. No transaction support.
+func (s *S000001Company) SelectOneByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (*Company, error) {
+	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
+		where.In(column, values)
 		for _, custom := range customs {
 			if custom != nil {
-				custom(where, get)
+				custom(get, where)
 				break
 			}
 		}
 	})
 }
 
-// SelectExistsByColumn Select exists by column values. no transaction support.
-func (s *S000001Company) SelectExistsByColumn(column string, values interface{}, customs ...func(f hey.Filter, g *hey.Get)) (bool, error) {
-	where := s.Filter().In(column, values)
-	return s.SelectExists(where, func(get *hey.Get) {
+// SelectExistsByColumn Select exists by column values. No transaction support.
+func (s *S000001Company) SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error) {
+	return s.SelectExists(func(get *hey.Get, where hey.Filter) {
+		where.In(column, values)
 		for _, custom := range customs {
 			if custom != nil {
-				custom(where, get)
+				custom(get, where)
 				break
 			}
 		}
 	})
 }
 
-// SelectGetByColumn Select get by column values. no transaction support.
-func (s *S000001Company) SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(f hey.Filter, g *hey.Get)) error {
-	where := s.Filter().In(column, values)
-	return s.SelectGet(where, func(get *hey.Get) {
+// SelectGetByColumn Select get by column values. No transaction support.
+func (s *S000001Company) SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error {
+	return s.SelectGet(func(get *hey.Get, where hey.Filter) {
+		where.In(column, values)
 		for _, custom := range customs {
 			if custom != nil {
-				custom(where, get)
+				custom(get, where)
 				break
 			}
 		}
@@ -526,13 +535,11 @@ func (s *S000001Company) SelectGetByColumn(column string, values interface{}, re
 }
 
 // DeleteInsert Delete first and then insert.
-func (s *S000001Company) DeleteInsert(where hey.Filter, create interface{}, ways ...*hey.Way) (deleteResult int64, insertResult int64, err error) {
-	if where != nil && !where.IsEmpty() {
-		if deleteResult, err = s.Delete(where, ways...); err != nil {
-			return
-		}
+func (s *S000001Company) DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error) {
+	if deleteResult, err = s.Delete(del); err != nil {
+		return
 	}
-	insertResult, err = s.Insert(create, ways...)
+	insertResult, err = s.Insert(create, add)
 	return
 }
 
@@ -673,13 +680,14 @@ type UPDATECompany struct {
 
 func (s *Company) rowsScanInitializePointer() {}
 
-func (s *S000001Company) RowsScanAll(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) ([]*Company, error) {
-	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
+func (s *S000001Company) RowsScanAll(custom func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+	get := s.Get()
+	where := s.Filter()
 	if custom != nil {
-		custom(get)
+		custom(get, where)
 	}
-	get.Select(s.columnSlice...)
-	return hey.RowsScanStructAllCmder[Company](get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
+	get.Where(func(f hey.Filter) { f.Use(where) }).Select(s.columnSlice...)
+	return hey.RowsScanStructAllCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
 		tmp.rowsScanInitializePointer()
 		return rows.Scan(
 			&tmp.Id,
@@ -698,13 +706,14 @@ func (s *S000001Company) RowsScanAll(where hey.Filter, custom func(get *hey.Get)
 	}, get)
 }
 
-func (s *S000001Company) RowsScanOne(where hey.Filter, custom func(get *hey.Get), ways ...*hey.Way) (*Company, error) {
-	get := s.Get(ways...).Where(func(f hey.Filter) { f.Use(where) })
+func (s *S000001Company) RowsScanOne(custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+	get := s.Get()
+	where := s.Filter()
 	if custom != nil {
-		custom(get)
+		custom(get, where)
 	}
-	get.Select(s.columnSlice...).Limit(1)
-	return hey.RowsScanStructOneCmder[Company](get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
+	get.Where(func(f hey.Filter) { f.Use(where) }).Select(s.columnSlice...).Limit(1)
+	return hey.RowsScanStructOneCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
 		tmp.rowsScanInitializePointer()
 		return rows.Scan(
 			&tmp.Id,
@@ -723,8 +732,8 @@ func (s *S000001Company) RowsScanOne(where hey.Filter, custom func(get *hey.Get)
 	}, get)
 }
 
-func (s *S000001Company) RowsScanAllMap(where hey.Filter, makeMapKey func(v *Company) string, custom func(get *hey.Get), ways ...*hey.Way) (map[string]*Company, []*Company, error) {
-	all, err := s.RowsScanAll(where, custom, ways...)
+func (s *S000001Company) RowsScanAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) string) (map[string]*Company, []*Company, error) {
+	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -735,8 +744,8 @@ func (s *S000001Company) RowsScanAllMap(where hey.Filter, makeMapKey func(v *Com
 	return allMap, all, nil
 }
 
-func (s *S000001Company) RowsScanAllMapInt(where hey.Filter, makeMapKey func(v *Company) int, custom func(get *hey.Get), ways ...*hey.Way) (map[int]*Company, []*Company, error) {
-	all, err := s.RowsScanAll(where, custom, ways...)
+func (s *S000001Company) RowsScanAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int) (map[int]*Company, []*Company, error) {
+	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -747,8 +756,8 @@ func (s *S000001Company) RowsScanAllMapInt(where hey.Filter, makeMapKey func(v *
 	return allMap, all, nil
 }
 
-func (s *S000001Company) RowsScanAllMapInt64(where hey.Filter, makeMapKey func(v *Company) int64, custom func(get *hey.Get), ways ...*hey.Way) (map[int64]*Company, []*Company, error) {
-	all, err := s.RowsScanAll(where, custom, ways...)
+func (s *S000001Company) RowsScanAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int64) (map[int64]*Company, []*Company, error) {
+	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -772,7 +781,7 @@ func (s *S000001Company) PrimaryKey() string {
 }
 
 // PrimaryKeyUpdate Update based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -780,14 +789,17 @@ func (s *S000001Company) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, filter hey.
 	if pk == nil {
 		return 0, nil
 	}
-	return s.Update(func(f hey.Filter, u *hey.Mod) {
-		f.Equal(s.PrimaryKey(), pk).Use(filter)
-		u.Update(primaryKey)
-	}, ways...)
+	return s.Update(func(mod *hey.Mod, where hey.Filter) {
+		where.Equal(s.PrimaryKey(), pk)
+		if custom != nil {
+			custom(mod, where)
+		}
+		mod.Update(primaryKey)
+	})
 }
 
 // PrimaryKeyHidden Hidden based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyHidden(primaryKey abc.PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -796,7 +808,7 @@ func (s *S000001Company) PrimaryKeyHidden(primaryKey abc.PrimaryKey, filter hey.
 		return 0, nil
 	}
 	updates := make(map[string]interface{}, 1<<3)
-	way := s.Way(ways...)
+	way := s.Way()
 	now := way.Now()
 	for _, tmp := range s.ColumnDeletedAt() {
 		updates[tmp] = now.Unix()
@@ -804,14 +816,17 @@ func (s *S000001Company) PrimaryKeyHidden(primaryKey abc.PrimaryKey, filter hey.
 	if len(updates) == 0 {
 		return 0, nil
 	}
-	return s.Update(func(f hey.Filter, u *hey.Mod) {
-		f.Equal(s.PrimaryKey(), pk).Use(filter)
-		u.Update(updates)
-	}, way)
+	return s.Update(func(mod *hey.Mod, where hey.Filter) {
+		where.Equal(s.PrimaryKey(), pk)
+		if custom != nil {
+			custom(mod, where)
+		}
+		mod.Update(updates)
+	})
 }
 
 // PrimaryKeyDelete Delete based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyDelete(primaryKey abc.PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -819,96 +834,166 @@ func (s *S000001Company) PrimaryKeyDelete(primaryKey abc.PrimaryKey, filter hey.
 	if pk == nil {
 		return 0, nil
 	}
-	return s.Delete(s.Filter(func(f hey.Filter) {
-		f.Equal(s.PrimaryKey(), pk).Use(filter)
-	}), ways...)
+	return s.Delete(func(del *hey.Del, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(pk))
+		if custom != nil {
+			custom(del, where)
+		}
+	})
 }
 
 // PrimaryKeyUpsert Upsert based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
 	pk := primaryKey.PrimaryKey()
 	if pk == nil {
-		return s.AddOne(nil, primaryKey, ways...)
+		return s.AddOne(primaryKey, add)
 	}
-	return s.PrimaryKeyUpdate(primaryKey, filter, ways...)
+	exists, err := s.SelectExists(func(query *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(pk))
+		if get != nil {
+			get(query, where)
+		}
+		query.Select(s.columnSlice[0]).Limit(1)
+	})
+	if err != nil {
+		return 0, err
+	}
+	if !exists {
+		return s.AddOne(primaryKey, add)
+	}
+	return s.PrimaryKeyUpdate(primaryKey, mod)
 }
 
 // PrimaryKeyUpdateAll Batch update based on primary key value.
-func (s *S000001Company) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, pks ...abc.PrimaryKey) (int64, error) {
+func (s *S000001Company) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+	if len(pks) == 0 {
+		return 0, nil
+	}
 	var total int64
-	err := s.Way(way).Transaction(ctx, func(tx *hey.Way) error {
+	batch := func(tx *hey.Way) error {
 		for _, tmp := range pks {
-			if num, err := s.PrimaryKeyUpdate(tmp, nil, tx); err != nil {
+			if num, err := s.PrimaryKeyHidden(tmp, func(mod *hey.Mod, where hey.Filter) {
+				if update != nil {
+					update(mod, where)
+				}
+				mod.SetWay(tx)
+			}); err != nil {
 				return err
 			} else {
 				total += num
 			}
 		}
 		return nil
-	})
-	if err != nil {
-		return 0, err
 	}
-	return total, nil
+	if way != nil && way.IsInTransaction() {
+		if err := batch(way); err != nil {
+			return total, err
+		}
+		return total, nil
+	}
+	err := s.Way().Transaction(ctx, func(tx *hey.Way) error { return batch(tx) })
+	return total, err
 }
 
 // PrimaryKeyHiddenAll Batch hidden based on primary key value.
-func (s *S000001Company) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, pks ...abc.PrimaryKey) (int64, error) {
+func (s *S000001Company) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+	if len(pks) == 0 {
+		return 0, nil
+	}
 	var total int64
-	err := s.Way(way).Transaction(ctx, func(tx *hey.Way) error {
+	batch := func(tx *hey.Way) error {
 		for _, tmp := range pks {
-			if num, err := s.PrimaryKeyHidden(tmp, nil, tx); err != nil {
+			if num, err := s.PrimaryKeyHidden(tmp, func(mod *hey.Mod, where hey.Filter) {
+				if hidden != nil {
+					hidden(mod, where)
+				}
+				mod.SetWay(tx)
+			}); err != nil {
 				return err
 			} else {
 				total += num
 			}
 		}
 		return nil
-	})
-	if err != nil {
-		return 0, err
 	}
-	return total, nil
+	if way != nil && way.IsInTransaction() {
+		if err := batch(way); err != nil {
+			return total, err
+		}
+		return total, nil
+	}
+	err := s.Way().Transaction(ctx, func(tx *hey.Way) error { return batch(tx) })
+	return total, err
 }
 
-// PrimaryKeyDeleteAll Batch delete based on primary key value.
-func (s *S000001Company) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, pks ...abc.PrimaryKey) (int64, error) {
+// PrimaryKeyDeleteAll Batch deletes it based on primary key value.
+func (s *S000001Company) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+	if len(pks) == 0 {
+		return 0, nil
+	}
 	var total int64
-	err := s.Way(way).Transaction(ctx, func(tx *hey.Way) error {
+	batch := func(tx *hey.Way) error {
 		for _, tmp := range pks {
-			if num, err := s.PrimaryKeyDelete(tmp, nil, tx); err != nil {
+			if num, err := s.PrimaryKeyDelete(tmp, func(del *hey.Del, where hey.Filter) {
+				if remove != nil {
+					remove(del, where)
+				}
+				del.SetWay(tx)
+			}); err != nil {
 				return err
 			} else {
 				total += num
 			}
 		}
 		return nil
-	})
-	if err != nil {
-		return 0, err
 	}
-	return total, nil
+	if way != nil && way.IsInTransaction() {
+		if err := batch(way); err != nil {
+			return total, err
+		}
+		return total, nil
+	}
+	err := s.Way().Transaction(ctx, func(tx *hey.Way) error { return batch(tx) })
+	return total, err
 }
 
 // PrimaryKeyUpsertAll Batch upsert based on primary key value.
-func (s *S000001Company) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, pks ...abc.PrimaryKey) (int64, error) {
+func (s *S000001Company) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+	if len(pks) == 0 {
+		return 0, nil
+	}
 	var total int64
 	var err error
 	var num int64
-	err = s.Way(way).Transaction(ctx, func(tx *hey.Way) error {
+	batch := func(tx *hey.Way) error {
 		for _, tmp := range pks {
 			if tmp == nil {
 				continue
 			}
-			pk := tmp.PrimaryKey()
-			if pk == nil {
-				num, err = s.Insert(tmp, tx)
-			} else {
-				num, err = s.PrimaryKeyUpdate(tmp, nil, tx)
-			}
+			num, err = s.PrimaryKeyUpsert(
+				tmp,
+				func(obj *hey.Add) {
+					if add != nil {
+						add(obj)
+					}
+					obj.SetWay(tx)
+				},
+				func(obj *hey.Get, where hey.Filter) {
+					if get != nil {
+						get(obj, where)
+					}
+					obj.SetWay(tx)
+				},
+				func(obj *hey.Mod, where hey.Filter) {
+					if mod != nil {
+						mod(obj, where)
+					}
+					obj.SetWay(tx)
+				},
+			)
 			if err != nil {
 				return err
 			} else {
@@ -916,11 +1001,15 @@ func (s *S000001Company) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, 
 			}
 		}
 		return nil
-	})
-	if err != nil {
-		return 0, err
 	}
-	return total, nil
+	if way != nil && way.IsInTransaction() {
+		if err = batch(way); err != nil {
+			return total, err
+		}
+		return total, nil
+	}
+	err = s.Way().Transaction(ctx, func(tx *hey.Way) error { return batch(tx) })
+	return total, err
 }
 
 // PrimaryKeyEqual Build Filter PrimaryKey = value
@@ -934,78 +1023,93 @@ func (s *S000001Company) PrimaryKeyIn(values ...interface{}) hey.Filter {
 }
 
 // PrimaryKeyUpdateMap Update a row of data using map[string]interface{} by primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify map[string]interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKeyValue == nil || len(modify) == 0 {
 		return 0, nil
 	}
-	return s.Update(func(f hey.Filter, u *hey.Mod) {
-		f.Use(s.PrimaryKeyEqual(primaryKeyValue), filter)
-		u.Update(modify)
-	}, ways...)
+	return s.Update(func(mod *hey.Mod, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
+		if update != nil {
+			update(mod, where)
+		}
+		mod.Update(modify)
+	})
 }
 
 // PrimaryKeyUpsertMap Upsert a row of data using map[string]interface{} by primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert map[string]interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error) {
 	if len(upsert) == 0 {
 		return 0, nil
 	}
 	if primaryKeyValue == nil {
-		return s.Insert(upsert, ways...)
+		return s.Insert(upsert, func(add *hey.Add) { add.SetWay(way) })
 	}
-	exists, err := s.PrimaryKeySelectExists(primaryKeyValue, filter, ways...)
+	exists, err := s.PrimaryKeySelectExists(primaryKeyValue, func(get *hey.Get, where hey.Filter) { get.SetWay(way) })
 	if err != nil {
 		return 0, err
 	}
 	if !exists {
-		return s.Insert(upsert, ways...)
+		return s.Insert(upsert, func(add *hey.Add) { add.SetWay(way) })
 	}
-	return s.Update(func(f hey.Filter, u *hey.Mod) {
-		f.Use(s.PrimaryKeyEqual(primaryKeyValue), filter)
-		u.Update(upsert)
-	}, ways...)
-}
-
-// PrimaryKeyDeleteFilter Delete one or more records based on the primary key values. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyDeleteFilter(primaryKeyValues interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error) {
-	return s.Delete(s.PrimaryKeyIn(primaryKeyValues).Use(filter), ways...)
+	return s.Update(func(mod *hey.Mod, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
+		mod.SetWay(way).Update(upsert)
+	})
 }
 
 // PrimaryKeySelectAll Query multiple records based on primary key values. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectAll(primaryKeyValues interface{}, custom func(get *hey.Get), filter hey.Filter, ways ...*hey.Way) ([]*Company, error) {
-	return s.SelectAll(s.PrimaryKeyIn(primaryKeyValues).Use(filter, s.Available()), custom, ways...)
+func (s *S000001Company) PrimaryKeySelectAll(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+	return s.SelectAll(func(get *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyIn(primaryKeyValues))
+		if custom != nil {
+			custom(get, where)
+		}
+	})
 }
 
 // PrimaryKeySelectOne Query a piece of data based on the primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectOne(primaryKeyValue interface{}, custom func(get *hey.Get), filter hey.Filter, ways ...*hey.Way) (*Company, error) {
-	return s.SelectOne(s.PrimaryKeyEqual(primaryKeyValue).Use(filter, s.Available()), custom, ways...)
+func (s *S000001Company) PrimaryKeySelectOne(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
+		if custom != nil {
+			custom(get, where)
+		}
+	})
 }
 
 // PrimaryKeySelectOneAsc Query a piece of data based on the primary key value. Additional conditions can be added in the filter. ORDER BY PrimaryKey ASC
-func (s *S000001Company) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, custom func(get *hey.Get), filter hey.Filter, ways ...*hey.Way) (*Company, error) {
-	return s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get) {
-		if custom != nil {
-			custom(get)
-		}
+func (s *S000001Company) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		get.Asc(s.PrimaryKey())
-	}, filter, ways...)
+		if custom != nil {
+			custom(get, where)
+		}
+	})
 }
 
 // PrimaryKeySelectOneDesc Query a piece of data based on the primary key value. Additional conditions can be added in the filter. ORDER BY PrimaryKey DESC
-func (s *S000001Company) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, custom func(get *hey.Get), filter hey.Filter, ways ...*hey.Way) (*Company, error) {
-	return s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get) {
-		if custom != nil {
-			custom(get)
-		}
+func (s *S000001Company) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		get.Desc(s.PrimaryKey())
-	}, filter, ways...)
+		if custom != nil {
+			custom(get, where)
+		}
+	})
 }
 
 // PrimaryKeySelectExists Check whether the data exists based on the primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, filter hey.Filter, ways ...*hey.Way) (bool, error) {
+func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error) {
 	if primaryKeyValue == nil {
 		return false, nil
 	}
-	exists, err := s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get) { get.Select(s.PrimaryKey()) }, filter, ways...)
+	exists, err := s.PrimaryKeySelectOne(primaryKeyValue, func(get *hey.Get, where hey.Filter) {
+		if custom != nil {
+			custom(get, where)
+		}
+		get.Select(s.PrimaryKey())
+	})
 	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
 		return false, err
 	}
@@ -1013,99 +1117,59 @@ func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, fil
 }
 
 // PrimaryKeySelectCount The number of statistics based on primary key values. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectCount(primaryKeyValues interface{}, filter hey.Filter, ways ...*hey.Way) (int64, error) {
+func (s *S000001Company) PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error) {
 	if primaryKeyValues == nil {
 		return 0, nil
 	}
-	return s.SelectCount(s.PrimaryKeyIn(primaryKeyValues).Use(filter, s.Available()), ways...)
+	return s.SelectCount(func(get *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyIn(primaryKeyValues))
+		if custom != nil {
+			custom(get, where)
+		}
+	})
 }
 
 // PrimaryKeySelectAllMap Make map[int]*Company and []*Company
-func (s *S000001Company) PrimaryKeySelectAllMap(primaryKeys interface{}, custom func(get *hey.Get), filter hey.Filter, ways ...*hey.Way) (map[int]*Company, []*Company, error) {
-	return s.SelectAllMapInt(s.PrimaryKeyIn(primaryKeys).Use(filter, s.Available()), func(v *Company) int { return v.Id }, custom, ways...)
-}
-
-// PrimaryKeyGetAll Query multiple records based on primary key values.
-func (s *S000001Company) PrimaryKeyGetAll(primaryKeys interface{}, ways ...*hey.Way) ([]*Company, error) {
-	return s.PrimaryKeySelectAll(primaryKeys, nil, nil, ways...)
-}
-
-// PrimaryKeyGetOne Query a piece of data based on the primary key value.
-func (s *S000001Company) PrimaryKeyGetOne(primaryKey interface{}, ways ...*hey.Way) (*Company, error) {
-	return s.PrimaryKeySelectOne(primaryKey, nil, nil, ways...)
-}
-
-// PrimaryKeyGetOneAsc Query a piece of data based on the primary key value. ORDER BY PrimaryKey ASC
-func (s *S000001Company) PrimaryKeyGetOneAsc(primaryKey interface{}, ways ...*hey.Way) (*Company, error) {
-	return s.PrimaryKeySelectOneAsc(primaryKey, nil, nil, ways...)
-}
-
-// PrimaryKeyGetOneDesc Query a piece of data based on the primary key value. ORDER BY PrimaryKey DESC
-func (s *S000001Company) PrimaryKeyGetOneDesc(primaryKey interface{}, ways ...*hey.Way) (*Company, error) {
-	return s.PrimaryKeySelectOneDesc(primaryKey, nil, nil, ways...)
-}
-
-// PrimaryKeyGetAllMap Make map[int]*Company and []*Company
-func (s *S000001Company) PrimaryKeyGetAllMap(primaryKeys interface{}, ways ...*hey.Way) (map[int]*Company, []*Company, error) {
-	return s.PrimaryKeySelectAllMap(primaryKeys, nil, nil, ways...)
-}
-
-// PrimaryKeyExists Check whether the data exists based on the primary key value.
-func (s *S000001Company) PrimaryKeyExists(primaryKey interface{}, ways ...*hey.Way) (bool, error) {
-	return s.PrimaryKeySelectExists(primaryKey, nil, ways...)
-}
-
-// UpsertOne Update or Insert one.
-func (s *S000001Company) UpsertOne(filter func(f hey.Filter, g *hey.Get), upsert interface{}, ways ...*hey.Way) (exists bool, affectedRowsOrIdValue int64, err error) {
-	where := s.Filter()
-	first, err := s.SelectOne(where, func(get *hey.Get) {
-		get.Select(s.PrimaryKey())
-		if filter != nil {
-			filter(where, get)
+func (s *S000001Company) PrimaryKeySelectAllMap(primaryKeys interface{}, custom func(get *hey.Get, where hey.Filter)) (map[int]*Company, []*Company, error) {
+	return s.SelectAllMapInt(func(get *hey.Get, where hey.Filter) {
+		where.Use(s.PrimaryKeyIn(primaryKeys))
+		if custom != nil {
+			custom(get, where)
 		}
-	}, ways...)
-	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
-		return false, 0, err
-	}
-	exists = first != nil
-	if exists {
-		affectedRowsOrIdValue, err = s.Update(func(f hey.Filter, u *hey.Mod) {
-			f.Equal(s.PrimaryKey(), first.Id)
-			u.Update(upsert)
-		}, ways...)
-	} else {
-		affectedRowsOrIdValue, err = s.AddOne(nil, upsert, ways...)
-	}
+	}, func(v *Company) int { return v.Id })
+}
+
+// PrimaryKeyUpsertOne Update or Insert one.
+func (s *S000001Company) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error) {
+	exists, err = s.SelectExists(func(query *hey.Get, where hey.Filter) {
+		query.Select(s.PrimaryKey())
+		where.Equal(s.PrimaryKey(), primaryKeyValue)
+		if get != nil {
+			get(query, where)
+		}
+	})
 	if err != nil {
-		return false, 0, err
+		return
 	}
-	return exists, affectedRowsOrIdValue, nil
-}
-
-// NotFoundInsert If it does not exist, it will be created.
-func (s *S000001Company) NotFoundInsert(filter func(f hey.Filter, g *hey.Get), create interface{}, ways ...*hey.Way) (exists bool, err error) {
-	where := s.Filter()
-	first, err := s.SelectOne(where, func(get *hey.Get) {
-		get.Select(s.PrimaryKey())
-		if filter != nil {
-			filter(where, get)
-		}
-	}, ways...)
-	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
-		return false, err
-	}
-	exists = first != nil
 	if exists {
-		return true, nil
+		affectedRowsOrIdValue, err = s.Update(func(update *hey.Mod, where hey.Filter) {
+			where.Equal(s.PrimaryKey(), primaryKeyValue)
+			if mod != nil {
+				mod(update, where)
+			}
+			update.Update(upsert)
+		})
+		if err != nil {
+			return
+		}
+		return
 	}
-	if err = hey.MustAffectedRows(s.Insert(create, ways...)); err != nil {
-		return false, err
-	}
-	return true, nil
+	affectedRowsOrIdValue, err = s.AddOne(upsert, add)
+	return
 }
 
 // Backup Constructing a backup statement.
-func (s *S000001Company) Backup(limit int64, custom func(get *hey.Get), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
+func (s *S000001Company) Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
 	if backup == nil {
 		return nil
 	}
@@ -1114,15 +1178,13 @@ func (s *S000001Company) Backup(limit int64, custom func(get *hey.Get), backup f
 	var err error
 	var lists []*Company
 	for {
-		lists, err = s.RowsScanAll(
-			s.Filter().GreaterThan(s.PrimaryKey(), idMin),
-			func(get *hey.Get) {
-				if custom != nil {
-					custom(get)
-				}
-				get.Asc(s.PrimaryKey()).Limit(limit)
-			},
-		)
+		lists, err = s.RowsScanAll(func(get *hey.Get, where hey.Filter) {
+			where.GreaterThan(s.PrimaryKey(), idMin)
+			if custom != nil {
+				custom(get, where)
+			}
+			get.Asc(s.PrimaryKey()).Limit(limit)
+		})
 		if err != nil {
 			return err
 		}
@@ -1139,6 +1201,19 @@ func (s *S000001Company) Backup(limit int64, custom func(get *hey.Get), backup f
 		}
 		idMin = lists[length-1].Id
 	}
+}
+
+// NotFoundInsert If it does not exist, it will be created.
+func (s *S000001Company) NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error) {
+	exists, err = s.SelectExists(get)
+	if err != nil {
+		return
+	}
+	if !exists {
+		err = hey.MustAffectedRows(s.Insert(create, add))
+		return
+	}
+	return
 }
 
 // Truncate Clear all data in the table.

@@ -1,4 +1,4 @@
-// code template version: v3.0.0 6e51d011dc279801cc620f872d835f27cb05e3af 1746444860-20250505193420
+// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -16,7 +16,7 @@ import (
 var tableCreateSql []byte
 
 type Database struct {
-	schemaMap   map[string]abc.Table
+	schemaMap   map[string]abc.DatabaseTable
 	schemaSlice []string
 
 	COMPANY  *S000001Company
@@ -32,7 +32,7 @@ func NewDatabase(ctx context.Context, way *hey.Way, initialize func(db *Database
 		COMPANY:  newS000001Company(basic, way),
 		EMPLOYEE: newS000001Employee(basic, way),
 	}
-	tmp.schemaMap = map[string]abc.Table{
+	tmp.schemaMap = map[string]abc.DatabaseTable{
 		tmp.COMPANY.Table():  tmp.COMPANY,
 		tmp.EMPLOYEE.Table(): tmp.EMPLOYEE,
 	}
@@ -48,9 +48,9 @@ func NewDatabase(ctx context.Context, way *hey.Way, initialize func(db *Database
 	return tmp, nil
 }
 
-func (s *Database) TableMap() map[string]abc.Table {
+func (s *Database) TableMap() map[string]abc.DatabaseTable {
 	length := len(s.schemaMap)
-	result := make(map[string]abc.Table, length)
+	result := make(map[string]abc.DatabaseTable, length)
 	for k, v := range s.schemaMap {
 		result[k] = v
 	}
@@ -86,9 +86,9 @@ func (s *Database) CopyDatabase(dst *hey.Way) error {
 			resultErr = err
 		}
 	}
-	backup := func(table abc.Table) {
+	backup := func(table abc.DatabaseTable) {
 		defer wg.Done()
-		if tmp, ok := table.(abc.DatabaseManager); ok {
+		if tmp, ok := table.(abc.DatabaseBackup); ok {
 			// TRUNCATE TABLE
 			if _, err := dst.Exec(hey.ConcatString("TRUNCATE", hey.SqlSpace, "TABLE", hey.SqlSpace, dst.Replace(table.Table()))); err != nil {
 				once.Do(func() { callOnce(err) })

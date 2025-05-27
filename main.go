@@ -17,7 +17,7 @@ import (
 var (
 	way        *hey.Way
 	schema     *tab.Schema
-	executeDdl bool // Whether to execute the DDL for deleting/creating tables ?
+	executeDdl bool // Whether to execute the DDL for deleting/creating tables?
 )
 
 var initSql = `DROP TABLE IF EXISTS company;
@@ -257,7 +257,7 @@ func Filter() {
 	f.Like(m.NAME, "A%")
 	way.Debugger(f)
 
-	// column1 IN ( SELECT column1 FROM xxx [ WHERE ] [ ORDER BY ] [ LIMIT ] )
+	// column1 IN (SELECT column1 FROM xxx [ WHERE ] [ ORDER BY ] [ LIMIT ])
 	f = way.F()
 	f.Equal(m.GENDER, "male")
 	queryFilter := way.F()
@@ -310,7 +310,7 @@ func Update() {
 		except.Add(m.ColumnDeletedAt()...)
 
 		// You can also set a list of fields that are only allowed to be updated.
-		// permit.Add(m.NAME, m.AGE, m.WEIGHT, m.HEIGHT, m.HEALTH)
+		/* permit.Add(m.NAME, m.AGE, m.WEIGHT, m.HEIGHT, m.HEALTH) */
 		permit.Add(m.NAME, m.AGE, m.WEIGHT, m.HEIGHT, m.HEALTH, m.SALARY)
 
 		// Special note: It is not recommended to use a and b at the same time.
@@ -333,7 +333,7 @@ func Select() {
 	t1 := schema.Company
 	m1 := t1.Model()
 
-	// Plan A for query.
+	// Plan A for a query.
 	{
 		a := hey.AliasA
 		b := hey.AliasB
@@ -348,7 +348,7 @@ func Select() {
 		way.Debugger(get)
 	}
 
-	// Plan B for query, it is strongly recommended to avoid using quoted strings as much as possible.
+	// Plan B for a query, it is strongly recommended to avoid using quoted strings as much as possible.
 	{
 		a := m.AliasA()
 		b := m1.AliasB()
@@ -371,7 +371,7 @@ func Select() {
 		filter.GreaterThan(m.ID, 0)
 
 		// SELECT ONE ROW
-		employee, err := m.SelectOne(filter, func(get *hey.Get) {
+		employee, err := m.SelectOne(func(get *hey.Get, where hey.Filter) {
 			get.Comment("select one row")
 		})
 		if err != nil {
@@ -380,7 +380,7 @@ func Select() {
 		fmt.Printf("%+v\n", employee)
 
 		// SELECT MORE ROWS
-		employees, err := m.SelectAll(filter, func(get *hey.Get) {
+		employees, err := m.SelectAll(func(get *hey.Get, where hey.Filter) {
 			get.Comment("select more rows")
 			get.Desc(m.ID).Limit(10)
 		})
@@ -421,10 +421,11 @@ func Transaction() {
 		}
 
 		// Method B
-		rows, err = t1.Update(tx, func(f hey.Filter, u *hey.Mod) {
-			f.Equal(m1.ID, 1)
-			u.Comment("update 2 in a transaction")
-			u.Set(m1.CITY, "Tokyo")
+		rows, err = t1.Update(func(mod *hey.Mod, where hey.Filter) {
+			mod.SetWay(tx)
+			where.Equal(m1.ID, 1)
+			mod.Comment("update 2 in a transaction")
+			mod.Set(m1.CITY, "Tokyo")
 		})
 		if err != nil {
 			return err
@@ -434,7 +435,7 @@ func Transaction() {
 			return msg
 		}
 
-		// Compare method A and method B, which one is easier to write ?
+		// Compare method A and method B, which one is easier to write?
 		return nil
 	})
 	if err != nil {
