@@ -1,8 +1,8 @@
-schema: S000001
+schema: S0000001
 driver: postgres
 data_source_name: postgres://postgres:postgres@localhost:5432/example?sslmode=disable
 table_schema_name: public
-using_table_schema_name: true
+using_table_schema_name: false
 column_serial: id
 column_created_at: created_at,add_at
 column_updated_at: updated_at,mod_at
@@ -14,6 +14,5 @@ disable_table_name_match_rules:
     - ^.*_zzz$
 allow_table_name: []
 allow_table_name_match_rules: []
-api_echo: false
 import_prefix: github.com/cd365/hey-example/db
 import_prefix_abc: github.com/cd365/hey-example/db

@@ -1,4 +1,4 @@
-// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
+// code template version: v3.0.0 e9ec97f8959c580123ea8ffbcfd1e2961fc08160 1750737071-20250624115111
 // TEMPLATE CODE DO NOT EDIT IT.
 
 /*
@@ -11,9 +11,7 @@ db
 │    └── echo.go
 └── model
     ├── aaa_schema.go
-    ├── aaa_table_create.sql
-    └── biz
-        └── aaa_schema.go
+    └── aaa_table_create.sql
 
 MULTIPLE
 db
@@ -22,19 +20,13 @@ db
 │    └── echo.go
 ├── model
 │    ├── aaa_schema.go
-│    ├── aaa_table_create.sql
-│    └── biz
-│        └── aaa_schema.go
+│    └── aaa_table_create.sql
 ├── model1
 │    ├── aaa_schema.go
-│    ├── aaa_table_create.sql
-│    └── biz
-│        └── aaa_schema.go
+│    └── aaa_table_create.sql
 └── model2
     ├── aaa_schema.go
-    ├── aaa_table_create.sql
-    └── biz
-        └── aaa_schema.go
+    └── aaa_table_create.sql
 */
 
 package abc
@@ -70,74 +62,186 @@ type PrimaryKey interface {
 }
 
 type DatabaseTable interface {
+	// Basic Default infrastructure, extensible.
 	Basic() *BASIC
+
+	// Table Get table name.
 	Table() string
+
+	// Comment Get table comment.
 	Comment() string
+
+	// Column Get the column name list of the table, support excluding some columns.
 	Column(except ...string) []string
+
+	// ColumnMap Get the map structure of column names.
 	ColumnMap() map[string]*struct{}
+
+	// ColumnString A complete list of table column names, concatenated using `, `.
 	ColumnString() string
+
+	// ColumnExist Check if a column name exists in the table.
 	ColumnExist(column string) bool
+
+	// ColumnPermit Extract all columns present in the table from the given column list.
 	ColumnPermit(permit ...string) []string
+
+	// ColumnValue Used to dynamically construct a map[string]any data structure, requiring odd-numbered items to be valid column names.
 	ColumnValue(columnValue ...interface{}) map[string]interface{}
+
+	// ColumnAutoIncr Table auto-increment column, usually only one element.
 	ColumnAutoIncr() []string
+
+	// ColumnCreatedAt Used to customize the creation timestamp of the database.
 	ColumnCreatedAt() []string
+
+	// ColumnUpdatedAt Used to customize the update timestamp of the database.
 	ColumnUpdatedAt() []string
+
+	// ColumnDeletedAt Used to customize database pseudo-deletion timestamp.
 	ColumnDeletedAt() []string
 
+	// Filter Quickly create a filter.
 	Filter(filters ...func(f hey.Filter)) hey.Filter
-	Way(ways ...*hey.Way) *hey.Way
-	Add(ways ...*hey.Way) *hey.Add
-	Del(ways ...*hey.Way) *hey.Del
-	Mod(ways ...*hey.Way) *hey.Mod
-	Get(ways ...*hey.Way) *hey.Get
-	Available() hey.Filter
-	Border() string
-	Debugger(cmder hey.Cmder)
 
+	// Way Custom selection *Way If a non-nil value exists in the given `ways`, it will be used first, otherwise the default value will be used.
+	Way(ways ...*hey.Way) *hey.Way
+
+	// Add Create an insert object, `ways` has the same functionality as the Way method.
+	Add(ways ...*hey.Way) *hey.Add
+
+	// Del Create a delete object, `ways` has the same functionality as the Way method.
+	Del(ways ...*hey.Way) *hey.Del
+
+	// Mod Create an update object, `ways` has the same functionality as the Way method.
+	Mod(ways ...*hey.Way) *hey.Mod
+
+	// Get Create a select object, `ways` has the same functionality as the Way method.
+	Get(ways ...*hey.Way) *hey.Get
+
+	// Available Get a filter for available data that is not marked as pseudo-deleted.
+	Available() hey.Filter
+
+	// Border Database escape identifiers, mysql: '`', postgresql: '"'
+	Border() string
+
+	// Debug Output SQL script, usually output to the terminal, often used for development and debugging.
+	Debug(cmder hey.Cmder)
+
+	// AddOne Quickly insert a piece of data and return the auto-increment id.
 	AddOne(create interface{}, custom func(add *hey.Add)) (int64, error)
+
+	// Insert Quickly insert one or more data.
 	Insert(create interface{}, custom func(add *hey.Add)) (int64, error)
+
+	// Delete Deleting data(physical deletion).
 	Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error)
+
+	// Update Updating data.
 	Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error)
+
+	// InsertSelect Use the query structure as the value of the inserted data.
 	InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error)
+
+	// SelectCount Number of statistical data.
 	SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error)
+
+	// SelectQuery Customize receiving query data.
 	SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error
+
+	// SelectGet Receiving query data through reflection.
 	SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error
+
+	// SelectExists Check if data exists by querying.
 	SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error)
+
+	// SelectCountGet First count the total number of data that meets the conditions, then query the data (usually query a part of the data).
 	SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error)
+
+	// DeleteByColumn Deleting data based on column value.
 	DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error)
+
+	// UpdateByColumn Updating data based on column value.
 	UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error)
+
+	// SelectExistsByColumn Filter by field value condition to check whether the data exists.
 	SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error)
+
+	// SelectGetByColumn Filter according to field value conditions and obtain query results through reflection.
 	SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error
+
+	// DeleteInsert Delete first and then insert.
 	DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error)
 
+	// PrimaryKey Get table primary key column name.
 	PrimaryKey() string
+
+	// PrimaryKeyUpdate Update by primary key value.
 	PrimaryKeyUpdate(primaryKey PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error)
+
+	// PrimaryKeyHidden Pseudo-delete by primary key value.
 	PrimaryKeyHidden(primaryKey PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error)
+
+	// PrimaryKeyDelete Delete by primary key value.
 	PrimaryKeyDelete(primaryKey PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error)
+
+	// PrimaryKeyUpsert Update or insert by primary key value.
 	PrimaryKeyUpsert(primaryKey PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error)
+
+	// PrimaryKeyUpdateAll Batch update by list of primary key values.
 	PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []PrimaryKey) (int64, error)
+
+	// PrimaryKeyHiddenAll Batch pseudo-delete by primary key value list.
 	PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []PrimaryKey) (int64, error)
+
+	// PrimaryKeyDeleteAll Batch delete by list of primary key values.
 	PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []PrimaryKey) (int64, error)
+
+	// PrimaryKeyUpsertAll Batch update or insert by list of primary key values.
 	PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []PrimaryKey) (int64, error)
+
+	// PrimaryKeyEqual Constructing primary key equality condition.
 	PrimaryKeyEqual(value interface{}) hey.Filter
+
+	// PrimaryKeyIn Constructing the primary key IN condition.
 	PrimaryKeyIn(values ...interface{}) hey.Filter
+
+	// PrimaryKeyUpdateMap Update using primary key value and map structure.
 	PrimaryKeyUpdateMap(primaryKey interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error)
+
+	// PrimaryKeyUpsertMap Update or insert using primary key value and map structure.
 	PrimaryKeyUpsertMap(primaryKey interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error)
+
+	// PrimaryKeySelectExists Use the primary key value to check whether the data exists.
 	PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error)
+
+	// PrimaryKeySelectCount Use the primary key value to query the total number of data.
 	PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error)
+
+	// PrimaryKeyUpsertOne Use the primary key value to update or insert.
 	PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error)
 
+	// NotFoundInsert If the data does not exist, insert it.
 	NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error)
 
+	// Truncate Clear all data in the table, you can use `ctx` to set the table name to be cleared.
 	Truncate(ctx context.Context) (int64, error)
 
+	// ValueStruct Create a structure to receive the current table data.
 	ValueStruct() interface{}
+
+	// ValueStructPtr Create a structure pointer to receive the current table data.
 	ValueStructPtr() interface{}
+
+	// ValueSliceStruct Create a structure slice to receive the current table data.
 	ValueSliceStruct(capacities ...int) interface{}
+
+	// ValueSliceStructPtr Create a structure pointer slice to receive the current table data.
 	ValueSliceStructPtr(capacities ...int) interface{}
 }
 
 type DatabaseBackup interface {
+	// Backup Backing up your data.
 	Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error
 }
 

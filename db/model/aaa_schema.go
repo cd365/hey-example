@@ -1,4 +1,4 @@
-// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
+// code template version: v3.0.0 e9ec97f8959c580123ea8ffbcfd1e2961fc08160 1750737071-20250624115111
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -8,6 +8,7 @@ import (
 	_ "embed"
 	"github.com/cd365/hey-example/db/abc"
 	"github.com/cd365/hey/v3"
+	"strings"
 	"sync"
 	"time"
 )
@@ -19,8 +20,9 @@ type Database struct {
 	schemaMap   map[string]abc.DatabaseTable
 	schemaSlice []string
 
-	COMPANY  *S000001Company
-	EMPLOYEE *S000001Employee
+	ACCOUNT         *S0000001Account
+	ARTICLE         *S0000001Article
+	ARTICLE_COMMENT *S0000001ArticleComment
 }
 
 func NewDatabase(ctx context.Context, way *hey.Way, initialize func(db *Database) error) (*Database, error) {
@@ -29,16 +31,19 @@ func NewDatabase(ctx context.Context, way *hey.Way, initialize func(db *Database
 		SqlExecuteMaxDuration: time.Minute,
 	}
 	tmp := &Database{
-		COMPANY:  newS000001Company(basic, way),
-		EMPLOYEE: newS000001Employee(basic, way),
+		ACCOUNT:         newS0000001Account(basic, way),
+		ARTICLE:         newS0000001Article(basic, way),
+		ARTICLE_COMMENT: newS0000001ArticleComment(basic, way),
 	}
 	tmp.schemaMap = map[string]abc.DatabaseTable{
-		tmp.COMPANY.Table():  tmp.COMPANY,
-		tmp.EMPLOYEE.Table(): tmp.EMPLOYEE,
+		tmp.ACCOUNT.Table():         tmp.ACCOUNT,
+		tmp.ARTICLE.Table():         tmp.ARTICLE,
+		tmp.ARTICLE_COMMENT.Table(): tmp.ARTICLE_COMMENT,
 	}
 	tmp.schemaSlice = []string{
-		tmp.COMPANY.Table(),
-		tmp.EMPLOYEE.Table(),
+		tmp.ACCOUNT.Table(),
+		tmp.ARTICLE.Table(),
+		tmp.ARTICLE_COMMENT.Table(),
 	}
 	if initialize != nil {
 		if err := initialize(tmp); err != nil {
@@ -111,4 +116,39 @@ func (s *Database) CopyDatabase(dst *hey.Way) error {
 	}
 	wg.Wait()
 	return resultErr
+}
+
+// InitializeAliasPrefix It is recommended to call the current function when initializing the object to prevent Replace.Set from panicking due to concurrent reading and writing.
+func InitializeAliasPrefix(db *Database, aliasPrefix []string) {
+	if db == nil || len(aliasPrefix) == 0 {
+		return
+	}
+	obj := db.schemaMap[db.schemaSlice[0]]
+	way := obj.Way()
+	cfg := way.GetCfg()
+	if cfg == nil || cfg.Manual == nil || cfg.Manual.Replace == nil {
+		return
+	}
+	border := obj.Border()
+	if border == hey.EmptyString {
+		return
+	}
+	replace := cfg.Manual.Replace
+	replaced := make(map[string]string)
+	for key, value := range replace.Map() {
+		replaced[key] = value
+	}
+	for _, aliasName := range aliasPrefix {
+		aliasNameWithBorder := hey.ConcatString(border, aliasName, border)
+		for key, value := range replaced {
+			if strings.Contains(key, hey.SqlPoint) {
+				continue
+			}
+			key1 := hey.ConcatString(aliasName, hey.SqlPoint, key)
+			key2 := hey.ConcatString(aliasName, hey.SqlPoint, hey.ConcatString(border, key, border))
+			targetValue := hey.ConcatString(aliasNameWithBorder, hey.SqlPoint, value)
+			replace.Set(key1, targetValue)
+			replace.Set(key2, targetValue)
+		}
+	}
 }

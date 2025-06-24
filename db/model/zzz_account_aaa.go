@@ -1,4 +1,4 @@
-// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
+// code template version: v3.0.0 e9ec97f8959c580123ea8ffbcfd1e2961fc08160 1750737071-20250624115111
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -14,35 +14,31 @@ import (
 	"strings"
 )
 
-// Company | company | company
-type Company struct {
-	Id        int    `json:"id" db:"id"`                 // id
-	Pid       int    `json:"pid" db:"pid"`               // pid
-	Name      string `json:"name" db:"name"`             // name
-	Country   string `json:"country" db:"country"`       // country
-	City      string `json:"city" db:"city"`             // city
-	Address   string `json:"address" db:"address"`       // address
-	Logo      string `json:"logo" db:"logo"`             // logo
-	State     int    `json:"state" db:"state"`           // state
-	Remark    string `json:"remark" db:"remark"`         // remark
-	CreatedAt int64  `json:"created_at" db:"created_at"` // created_at
-	UpdatedAt int64  `json:"updated_at" db:"updated_at"` // updated_at
-	DeletedAt int64  `json:"deleted_at" db:"deleted_at"` // deleted_at
+// Account | account | account comment
+type Account struct {
+	Id        int     `json:"id" db:"id"`                 // id comment
+	Email     string  `json:"email" db:"email"`           // email comment
+	Username  string  `json:"username" db:"username"`     // username comment
+	Balance   float64 `json:"balance" db:"balance"`       // balance comment
+	Password  string  `json:"password" db:"password"`     // balance password
+	Status    int     `json:"status" db:"status"`         // status comment
+	Ip        string  `json:"ip" db:"ip"`                 // ip comment
+	CreatedAt int64   `json:"created_at" db:"created_at"` // created_at comment
+	UpdatedAt int64   `json:"updated_at" db:"updated_at"` // updated_at comment
+	DeletedAt int64   `json:"deleted_at" db:"deleted_at"` // deleted_at comment
 }
 
-type S000001Company struct {
-	ID         string // id
-	PID        string // pid
-	NAME       string // name
-	COUNTRY    string // country
-	CITY       string // city
-	ADDRESS    string // address
-	LOGO       string // logo
-	STATE      string // state
-	REMARK     string // remark
-	CREATED_AT string // created_at
-	UPDATED_AT string // updated_at
-	DELETED_AT string // deleted_at
+type S0000001Account struct {
+	ID         string // id comment
+	EMAIL      string // email comment
+	USERNAME   string // username comment
+	BALANCE    string // balance comment
+	PASSWORD   string // balance password
+	STATUS     string // status comment
+	IP         string // ip comment
+	CREATED_AT string // created_at comment
+	UPDATED_AT string // updated_at comment
+	DELETED_AT string // deleted_at comment
 
 	table   string
 	comment string
@@ -57,19 +53,19 @@ type S000001Company struct {
 	way   *hey.Way
 }
 
-func (s *S000001Company) Basic() *abc.BASIC {
+func (s *S0000001Account) Basic() *abc.BASIC {
 	return s.basic
 }
 
-func (s *S000001Company) Table() string {
+func (s *S0000001Account) Table() string {
 	return s.table
 }
 
-func (s *S000001Company) Comment() string {
+func (s *S0000001Account) Comment() string {
 	return s.comment
 }
 
-func (s *S000001Company) Column(except ...string) []string {
+func (s *S0000001Account) Column(except ...string) []string {
 	excepted := make(map[string]*struct{}, len(except))
 	for _, v := range except {
 		excepted[v] = &struct{}{}
@@ -84,7 +80,7 @@ func (s *S000001Company) Column(except ...string) []string {
 	return result
 }
 
-func (s *S000001Company) ColumnMap() map[string]*struct{} {
+func (s *S0000001Account) ColumnMap() map[string]*struct{} {
 	result := make(map[string]*struct{}, len(s.columnMap))
 	for k, v := range s.columnMap {
 		result[k] = v
@@ -92,16 +88,16 @@ func (s *S000001Company) ColumnMap() map[string]*struct{} {
 	return result
 }
 
-func (s *S000001Company) ColumnString() string {
-	return `"id", "pid", "name", "country", "city", "address", "logo", "state", "remark", "created_at", "updated_at", "deleted_at"`
+func (s *S0000001Account) ColumnString() string {
+	return `"id", "email", "username", "balance", "password", "status", "ip", "created_at", "updated_at", "deleted_at"`
 }
 
-func (s *S000001Company) ColumnExist(column string) bool {
+func (s *S0000001Account) ColumnExist(column string) bool {
 	_, exist := s.columnMap[column]
 	return exist
 }
 
-func (s *S000001Company) ColumnPermit(permit ...string) []string {
+func (s *S0000001Account) ColumnPermit(permit ...string) []string {
 	result := make([]string, 0, len(permit))
 	for _, v := range permit {
 		if ok := s.ColumnExist(v); ok {
@@ -111,7 +107,7 @@ func (s *S000001Company) ColumnPermit(permit ...string) []string {
 	return result
 }
 
-func (s *S000001Company) ColumnValue(columnValue ...interface{}) map[string]interface{} {
+func (s *S0000001Account) ColumnValue(columnValue ...interface{}) map[string]interface{} {
 	length := len(columnValue)
 	if length == 0 || length&1 == 1 {
 		return nil
@@ -133,23 +129,23 @@ func (s *S000001Company) ColumnValue(columnValue ...interface{}) map[string]inte
 	return result
 }
 
-func (s *S000001Company) ColumnAutoIncr() []string {
+func (s *S0000001Account) ColumnAutoIncr() []string {
 	return []string{s.ID}
 }
 
-func (s *S000001Company) ColumnCreatedAt() []string {
+func (s *S0000001Account) ColumnCreatedAt() []string {
 	return []string{s.CREATED_AT}
 }
 
-func (s *S000001Company) ColumnUpdatedAt() []string {
+func (s *S0000001Account) ColumnUpdatedAt() []string {
 	return []string{s.UPDATED_AT}
 }
 
-func (s *S000001Company) ColumnDeletedAt() []string {
+func (s *S0000001Account) ColumnDeletedAt() []string {
 	return []string{s.DELETED_AT}
 }
 
-func (s *S000001Company) Filter(filters ...func(f hey.Filter)) hey.Filter {
+func (s *S0000001Account) Filter(filters ...func(f hey.Filter)) hey.Filter {
 	filter := s.way.F()
 	for _, tmp := range filters {
 		if tmp != nil {
@@ -159,11 +155,11 @@ func (s *S000001Company) Filter(filters ...func(f hey.Filter)) hey.Filter {
 	return filter
 }
 
-func (s *S000001Company) Way(ways ...*hey.Way) *hey.Way {
+func (s *S0000001Account) Way(ways ...*hey.Way) *hey.Way {
 	return abc.Way(s.way, ways...)
 }
 
-func (s *S000001Company) Add(ways ...*hey.Way) *hey.Add {
+func (s *S0000001Account) Add(ways ...*hey.Way) *hey.Add {
 	excepts := s.ColumnAutoIncr()
 	return s.Way(ways...).Add(s.Table()).
 		ExceptPermit(
@@ -174,11 +170,11 @@ func (s *S000001Company) Add(ways ...*hey.Way) *hey.Add {
 		)
 }
 
-func (s *S000001Company) Del(ways ...*hey.Way) *hey.Del {
+func (s *S0000001Account) Del(ways ...*hey.Way) *hey.Del {
 	return s.Way(ways...).Del(s.Table())
 }
 
-func (s *S000001Company) Mod(ways ...*hey.Way) *hey.Mod {
+func (s *S0000001Account) Mod(ways ...*hey.Way) *hey.Mod {
 	excepts := s.ColumnAutoIncr()
 	excepts = append(excepts, s.ColumnCreatedAt()...)
 	return s.Way(ways...).Mod(s.Table()).
@@ -190,11 +186,11 @@ func (s *S000001Company) Mod(ways ...*hey.Way) *hey.Mod {
 		)
 }
 
-func (s *S000001Company) Get(ways ...*hey.Way) *hey.Get {
+func (s *S0000001Account) Get(ways ...*hey.Way) *hey.Get {
 	return s.Way(ways...).Get(s.Table()).Select(s.columnSlice...)
 }
 
-func (s *S000001Company) Available() hey.Filter {
+func (s *S0000001Account) Available() hey.Filter {
 	return s.Filter(func(f hey.Filter) {
 		for _, v := range s.ColumnDeletedAt() {
 			f.Equal(v, 0)
@@ -202,12 +198,12 @@ func (s *S000001Company) Available() hey.Filter {
 	})
 }
 
-func (s *S000001Company) Debugger(cmder hey.Cmder) {
-	s.way.Debugger(cmder)
+func (s *S0000001Account) Debug(cmder hey.Cmder) {
+	s.way.Debug(cmder)
 }
 
 // AddOne Insert a record and return the auto-increment id.
-func (s *S000001Company) AddOne(create interface{}, custom func(add *hey.Add)) (int64, error) {
+func (s *S0000001Account) AddOne(create interface{}, custom func(add *hey.Add)) (int64, error) {
 	if create == nil {
 		return 0, nil
 	}
@@ -237,7 +233,7 @@ func (s *S000001Company) AddOne(create interface{}, custom func(add *hey.Add)) (
 }
 
 // Insert SQL INSERT.
-func (s *S000001Company) Insert(create interface{}, custom func(add *hey.Add)) (int64, error) {
+func (s *S0000001Account) Insert(create interface{}, custom func(add *hey.Add)) (int64, error) {
 	if create == nil {
 		return 0, nil
 	}
@@ -266,7 +262,7 @@ func (s *S000001Company) Insert(create interface{}, custom func(add *hey.Add)) (
 }
 
 // Delete SQL DELETE.
-func (s *S000001Company) Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	if custom == nil {
 		return 0, nil
 	}
@@ -282,7 +278,7 @@ func (s *S000001Company) Delete(custom func(del *hey.Del, where hey.Filter)) (in
 }
 
 // Update SQL UPDATE.
-func (s *S000001Company) Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if update == nil {
 		return 0, nil
 	}
@@ -304,7 +300,7 @@ func (s *S000001Company) Update(update func(mod *hey.Mod, where hey.Filter)) (in
 }
 
 // InsertSelect SQL INSERT and SELECT.
-func (s *S000001Company) InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error) {
+func (s *S0000001Account) InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error) {
 	if len(columns) == 0 || get == nil {
 		return 0, nil
 	}
@@ -314,7 +310,7 @@ func (s *S000001Company) InsertSelect(columns []string, get *hey.Get, way *hey.W
 }
 
 // SelectCount SQL SELECT COUNT.
-func (s *S000001Company) SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error) {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
@@ -324,7 +320,7 @@ func (s *S000001Company) SelectCount(custom func(get *hey.Get, where hey.Filter)
 }
 
 // SelectQuery SQL SELECT.
-func (s *S000001Company) SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error {
+func (s *S0000001Account) SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
@@ -334,12 +330,12 @@ func (s *S000001Company) SelectQuery(custom func(get *hey.Get, where hey.Filter)
 }
 
 // EmptySlice Initialize an empty slice.
-func (s *S000001Company) EmptySlice() []*Company {
-	return make([]*Company, 0)
+func (s *S0000001Account) EmptySlice() []*Account {
+	return make([]*Account, 0)
 }
 
 // SelectGet SQL SELECT.
-func (s *S000001Company) SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error {
+func (s *S0000001Account) SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
@@ -349,7 +345,7 @@ func (s *S000001Company) SelectGet(custom func(get *hey.Get, where hey.Filter), 
 }
 
 // SelectAll SQL SELECT ALL.
-func (s *S000001Company) SelectAll(custom func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+func (s *S0000001Account) SelectAll(custom func(get *hey.Get, where hey.Filter)) ([]*Account, error) {
 	lists := s.EmptySlice()
 	if err := s.SelectGet(custom, &lists); err != nil {
 		return nil, err
@@ -358,7 +354,7 @@ func (s *S000001Company) SelectAll(custom func(get *hey.Get, where hey.Filter)) 
 }
 
 // SelectOne SQL SELECT ONE.
-func (s *S000001Company) SelectOne(custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+func (s *S0000001Account) SelectOne(custom func(get *hey.Get, where hey.Filter)) (*Account, error) {
 	all, err := s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		if custom != nil {
 			custom(get, where)
@@ -375,7 +371,7 @@ func (s *S000001Company) SelectOne(custom func(get *hey.Get, where hey.Filter)) 
 }
 
 // SelectExists SQL SELECT EXISTS.
-func (s *S000001Company) SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error) {
+func (s *S0000001Account) SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error) {
 	exists, err := s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		if custom != nil {
 			custom(get, where)
@@ -389,13 +385,13 @@ func (s *S000001Company) SelectExists(custom func(get *hey.Get, where hey.Filter
 }
 
 // SelectCountAll SQL SELECT COUNT + ALL.
-func (s *S000001Company) SelectCountAll(custom func(get *hey.Get, where hey.Filter)) (int64, []*Company, error) {
+func (s *S0000001Account) SelectCountAll(custom func(get *hey.Get, where hey.Filter)) (int64, []*Account, error) {
 	count, err := s.SelectCount(custom)
 	if err != nil {
 		return 0, nil, err
 	}
 	if count == 0 {
-		return 0, make([]*Company, 0), nil
+		return 0, make([]*Account, 0), nil
 	}
 	all, err := s.SelectAll(custom)
 	if err != nil {
@@ -405,7 +401,7 @@ func (s *S000001Company) SelectCountAll(custom func(get *hey.Get, where hey.Filt
 }
 
 // SelectCountGet SQL SELECT COUNT + GET.
-func (s *S000001Company) SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error) {
+func (s *S0000001Account) SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error) {
 	count, err := s.SelectCount(custom)
 	if err != nil {
 		return 0, err
@@ -419,39 +415,39 @@ func (s *S000001Company) SelectCountGet(custom func(get *hey.Get, where hey.Filt
 	return count, nil
 }
 
-// SelectAllMap Make map[string]*Company
-func (s *S000001Company) SelectAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) string) (map[string]*Company, []*Company, error) {
+// SelectAllMap Make map[string]*Account
+func (s *S0000001Account) SelectAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Account) string) (map[string]*Account, []*Account, error) {
 	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[string]*Company, len(all))
+	allMap := make(map[string]*Account, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-// SelectAllMapInt Make map[int]*Company
-func (s *S000001Company) SelectAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int) (map[int]*Company, []*Company, error) {
+// SelectAllMapInt Make map[int]*Account
+func (s *S0000001Account) SelectAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Account) int) (map[int]*Account, []*Account, error) {
 	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int]*Company, len(all))
+	allMap := make(map[int]*Account, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-// SelectAllMapInt64 Make map[int64]*Company
-func (s *S000001Company) SelectAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int64) (map[int64]*Company, []*Company, error) {
+// SelectAllMapInt64 Make map[int64]*Account
+func (s *S0000001Account) SelectAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Account) int64) (map[int64]*Account, []*Account, error) {
 	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int64]*Company, len(all))
+	allMap := make(map[int64]*Account, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
@@ -459,7 +455,7 @@ func (s *S000001Company) SelectAllMapInt64(custom func(get *hey.Get, where hey.F
 }
 
 // DeleteByColumn Delete by column values. Additional conditions can be added in the filters. No transaction support.
-func (s *S000001Company) DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	return s.Delete(func(del *hey.Del, where hey.Filter) {
 		where.In(column, values)
 		if custom != nil {
@@ -469,7 +465,7 @@ func (s *S000001Company) DeleteByColumn(column string, values interface{}, custo
 }
 
 // UpdateByColumn Update by column values. Additional conditions can be added in the filters. No transaction support.
-func (s *S000001Company) UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if update == nil {
 		return 0, nil
 	}
@@ -483,7 +479,7 @@ func (s *S000001Company) UpdateByColumn(column string, values interface{}, updat
 }
 
 // SelectAllByColumn Select all by column values. No transaction support.
-func (s *S000001Company) SelectAllByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+func (s *S0000001Account) SelectAllByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) ([]*Account, error) {
 	return s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -496,7 +492,7 @@ func (s *S000001Company) SelectAllByColumn(column string, values interface{}, cu
 }
 
 // SelectOneByColumn Select one by column values. No transaction support.
-func (s *S000001Company) SelectOneByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (*Company, error) {
+func (s *S0000001Account) SelectOneByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (*Account, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -509,7 +505,7 @@ func (s *S000001Company) SelectOneByColumn(column string, values interface{}, cu
 }
 
 // SelectExistsByColumn Select exists by column values. No transaction support.
-func (s *S000001Company) SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error) {
+func (s *S0000001Account) SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error) {
 	return s.SelectExists(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -522,7 +518,7 @@ func (s *S000001Company) SelectExistsByColumn(column string, values interface{},
 }
 
 // SelectGetByColumn Select get by column values. No transaction support.
-func (s *S000001Company) SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error {
+func (s *S0000001Account) SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error {
 	return s.SelectGet(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -535,7 +531,7 @@ func (s *S000001Company) SelectGetByColumn(column string, values interface{}, re
 }
 
 // DeleteInsert Delete first and then insert.
-func (s *S000001Company) DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error) {
+func (s *S0000001Account) DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error) {
 	if deleteResult, err = s.Delete(del); err != nil {
 		return
 	}
@@ -544,67 +540,59 @@ func (s *S000001Company) DeleteInsert(del func(del *hey.Del, where hey.Filter), 
 }
 
 // Border SQL identifier boundary characters.
-func (s *S000001Company) Border() string {
+func (s *S0000001Account) Border() string {
 	return s.border
 }
 
-func (s *S000001Company) initial() *S000001Company {
-	s.ID = "id"                 // id
-	s.PID = "pid"               // pid
-	s.NAME = "name"             // name
-	s.COUNTRY = "country"       // country
-	s.CITY = "city"             // city
-	s.ADDRESS = "address"       // address
-	s.LOGO = "logo"             // logo
-	s.STATE = "state"           // state
-	s.REMARK = "remark"         // remark
-	s.CREATED_AT = "created_at" // created_at
-	s.UPDATED_AT = "updated_at" // updated_at
-	s.DELETED_AT = "deleted_at" // deleted_at
+func (s *S0000001Account) initial() *S0000001Account {
+	s.ID = "id"                 // id comment
+	s.EMAIL = "email"           // email comment
+	s.USERNAME = "username"     // username comment
+	s.BALANCE = "balance"       // balance comment
+	s.PASSWORD = "password"     // balance password
+	s.STATUS = "status"         // status comment
+	s.IP = "ip"                 // ip comment
+	s.CREATED_AT = "created_at" // created_at comment
+	s.UPDATED_AT = "updated_at" // updated_at comment
+	s.DELETED_AT = "deleted_at" // deleted_at comment
 
 	s.columnMap = map[string]*struct{}{
-		s.ID:         {}, // id
-		s.PID:        {}, // pid
-		s.NAME:       {}, // name
-		s.COUNTRY:    {}, // country
-		s.CITY:       {}, // city
-		s.ADDRESS:    {}, // address
-		s.LOGO:       {}, // logo
-		s.STATE:      {}, // state
-		s.REMARK:     {}, // remark
-		s.CREATED_AT: {}, // created_at
-		s.UPDATED_AT: {}, // updated_at
-		s.DELETED_AT: {}, // deleted_at
+		s.ID:         {}, // id comment
+		s.EMAIL:      {}, // email comment
+		s.USERNAME:   {}, // username comment
+		s.BALANCE:    {}, // balance comment
+		s.PASSWORD:   {}, // balance password
+		s.STATUS:     {}, // status comment
+		s.IP:         {}, // ip comment
+		s.CREATED_AT: {}, // created_at comment
+		s.UPDATED_AT: {}, // updated_at comment
+		s.DELETED_AT: {}, // deleted_at comment
 	}
 
 	s.columnSlice = []string{
-		s.ID,         // id
-		s.PID,        // pid
-		s.NAME,       // name
-		s.COUNTRY,    // country
-		s.CITY,       // city
-		s.ADDRESS,    // address
-		s.LOGO,       // logo
-		s.STATE,      // state
-		s.REMARK,     // remark
-		s.CREATED_AT, // created_at
-		s.UPDATED_AT, // updated_at
-		s.DELETED_AT, // deleted_at
+		s.ID,         // id comment
+		s.EMAIL,      // email comment
+		s.USERNAME,   // username comment
+		s.BALANCE,    // balance comment
+		s.PASSWORD,   // balance password
+		s.STATUS,     // status comment
+		s.IP,         // ip comment
+		s.CREATED_AT, // created_at comment
+		s.UPDATED_AT, // updated_at comment
+		s.DELETED_AT, // deleted_at comment
 	}
 
 	s.columnIndex = map[string]int{
-		s.ID:         0,  // id
-		s.PID:        1,  // pid
-		s.NAME:       2,  // name
-		s.COUNTRY:    3,  // country
-		s.CITY:       4,  // city
-		s.ADDRESS:    5,  // address
-		s.LOGO:       6,  // logo
-		s.STATE:      7,  // state
-		s.REMARK:     8,  // remark
-		s.CREATED_AT: 9,  // created_at
-		s.UPDATED_AT: 10, // updated_at
-		s.DELETED_AT: 11, // deleted_at
+		s.ID:         0, // id comment
+		s.EMAIL:      1, // email comment
+		s.USERNAME:   2, // username comment
+		s.BALANCE:    3, // balance comment
+		s.PASSWORD:   4, // balance password
+		s.STATUS:     5, // status comment
+		s.IP:         6, // ip comment
+		s.CREATED_AT: 7, // created_at comment
+		s.UPDATED_AT: 8, // updated_at comment
+		s.DELETED_AT: 9, // deleted_at comment
 	}
 
 	replace := s.way.GetCfg().Manual.Replace
@@ -617,27 +605,25 @@ func (s *S000001Company) initial() *S000001Company {
 		}
 		newest = fmt.Sprintf("%s%s%s", s.border, newest, s.border)
 		replace.Set(table, newest)
-		replace.Set(s.ID, `"id"`)                 // id
-		replace.Set(s.PID, `"pid"`)               // pid
-		replace.Set(s.NAME, `"name"`)             // name
-		replace.Set(s.COUNTRY, `"country"`)       // country
-		replace.Set(s.CITY, `"city"`)             // city
-		replace.Set(s.ADDRESS, `"address"`)       // address
-		replace.Set(s.LOGO, `"logo"`)             // logo
-		replace.Set(s.STATE, `"state"`)           // state
-		replace.Set(s.REMARK, `"remark"`)         // remark
-		replace.Set(s.CREATED_AT, `"created_at"`) // created_at
-		replace.Set(s.UPDATED_AT, `"updated_at"`) // updated_at
-		replace.Set(s.DELETED_AT, `"deleted_at"`) // deleted_at
+		replace.Set(s.ID, `"id"`)                 // id comment
+		replace.Set(s.EMAIL, `"email"`)           // email comment
+		replace.Set(s.USERNAME, `"username"`)     // username comment
+		replace.Set(s.BALANCE, `"balance"`)       // balance comment
+		replace.Set(s.PASSWORD, `"password"`)     // balance password
+		replace.Set(s.STATUS, `"status"`)         // status comment
+		replace.Set(s.IP, `"ip"`)                 // ip comment
+		replace.Set(s.CREATED_AT, `"created_at"`) // created_at comment
+		replace.Set(s.UPDATED_AT, `"updated_at"`) // updated_at comment
+		replace.Set(s.DELETED_AT, `"deleted_at"`) // deleted_at comment
 
 	}
 	return s
 }
 
-func newS000001Company(basic abc.BASIC, way *hey.Way) *S000001Company {
-	s := &S000001Company{}
-	s.table = "public.company"
-	s.comment = "company"
+func newS0000001Account(basic abc.BASIC, way *hey.Way) *S0000001Account {
+	s := &S0000001Account{}
+	s.table = "account"
+	s.comment = "account comment"
 	s.border = `"`
 	s.basic = &basic
 	s.way = way
@@ -645,60 +631,54 @@ func newS000001Company(basic abc.BASIC, way *hey.Way) *S000001Company {
 	return s
 }
 
-type INSERTCompany struct {
-	Pid     int    `json:"pid" db:"pid" validate:"omitempty"`                       // pid
-	Name    string `json:"name" db:"name" validate:"omitempty,min=0,max=128"`       // name
-	Country string `json:"country" db:"country" validate:"omitempty,min=0,max=128"` // country
-	City    string `json:"city" db:"city" validate:"omitempty,min=0,max=128"`       // city
-	Address string `json:"address" db:"address" validate:"omitempty,min=0,max=128"` // address
-	Logo    string `json:"logo" db:"logo" validate:"omitempty,min=0,max=255"`       // logo
-	State   int    `json:"state" db:"state" validate:"omitempty"`                   // state
-	Remark  string `json:"remark" db:"remark" validate:"omitempty"`                 // remark
+type INSERTAccount struct {
+	Email    string  `json:"email" db:"email" validate:"omitempty,min=0,max=100"`      // email comment
+	Username string  `json:"username" db:"username" validate:"omitempty,min=0,max=50"` // username comment
+	Balance  float64 `json:"balance" db:"balance" validate:"omitempty"`                // balance comment
+	Password string  `json:"password" db:"password" validate:"omitempty,min=0,max=64"` // balance password
+	Status   int     `json:"status" db:"status" validate:"omitempty"`                  // status comment
+	Ip       string  `json:"ip" db:"ip" validate:"omitempty,min=0,max=39"`             // ip comment
 }
 
-func (s INSERTCompany) PrimaryKey() interface{} {
+func (s INSERTAccount) PrimaryKey() interface{} {
 	return nil
 }
 
-type DELETECompany struct {
-	Id *int `json:"id" db:"id" validate:"required,min=1"` // id
+type DELETEAccount struct {
+	Id *int `json:"id" db:"id" validate:"required,min=1"` // id comment
 }
 
-type UPDATECompany struct {
-	DELETECompany
-	Pid     *int    `json:"pid" db:"pid" validate:"omitempty"`                       // pid
-	Name    *string `json:"name" db:"name" validate:"omitempty,min=0,max=128"`       // name
-	Country *string `json:"country" db:"country" validate:"omitempty,min=0,max=128"` // country
-	City    *string `json:"city" db:"city" validate:"omitempty,min=0,max=128"`       // city
-	Address *string `json:"address" db:"address" validate:"omitempty,min=0,max=128"` // address
-	Logo    *string `json:"logo" db:"logo" validate:"omitempty,min=0,max=255"`       // logo
-	State   *int    `json:"state" db:"state" validate:"omitempty"`                   // state
-	Remark  *string `json:"remark" db:"remark" validate:"omitempty"`                 // remark
+type UPDATEAccount struct {
+	DELETEAccount
+	Email    *string  `json:"email" db:"email" validate:"omitempty,min=0,max=100"`      // email comment
+	Username *string  `json:"username" db:"username" validate:"omitempty,min=0,max=50"` // username comment
+	Balance  *float64 `json:"balance" db:"balance" validate:"omitempty"`                // balance comment
+	Password *string  `json:"password" db:"password" validate:"omitempty,min=0,max=64"` // balance password
+	Status   *int     `json:"status" db:"status" validate:"omitempty"`                  // status comment
+	Ip       *string  `json:"ip" db:"ip" validate:"omitempty,min=0,max=39"`             // ip comment
 }
 
 /* RowsScan, scan data directly, without using reflect. */
 
-func (s *Company) rowsScanInitializePointer() {}
+func (s *Account) rowsScanInitializePointer() {}
 
-func (s *S000001Company) RowsScanAll(custom func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+func (s *S0000001Account) RowsScanAll(custom func(get *hey.Get, where hey.Filter)) ([]*Account, error) {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
 		custom(get, where)
 	}
 	get.Where(func(f hey.Filter) { f.Use(where) }).Select(s.columnSlice...)
-	return hey.RowsScanStructAllCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
+	return hey.RowsScanStructAllCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Account) error {
 		tmp.rowsScanInitializePointer()
 		return rows.Scan(
 			&tmp.Id,
-			&tmp.Pid,
-			&tmp.Name,
-			&tmp.Country,
-			&tmp.City,
-			&tmp.Address,
-			&tmp.Logo,
-			&tmp.State,
-			&tmp.Remark,
+			&tmp.Email,
+			&tmp.Username,
+			&tmp.Balance,
+			&tmp.Password,
+			&tmp.Status,
+			&tmp.Ip,
 			&tmp.CreatedAt,
 			&tmp.UpdatedAt,
 			&tmp.DeletedAt,
@@ -706,25 +686,23 @@ func (s *S000001Company) RowsScanAll(custom func(get *hey.Get, where hey.Filter)
 	}, get)
 }
 
-func (s *S000001Company) RowsScanOne(custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+func (s *S0000001Account) RowsScanOne(custom func(get *hey.Get, where hey.Filter)) (*Account, error) {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
 		custom(get, where)
 	}
 	get.Where(func(f hey.Filter) { f.Use(where) }).Select(s.columnSlice...).Limit(1)
-	return hey.RowsScanStructOneCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Company) error {
+	return hey.RowsScanStructOneCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Account) error {
 		tmp.rowsScanInitializePointer()
 		return rows.Scan(
 			&tmp.Id,
-			&tmp.Pid,
-			&tmp.Name,
-			&tmp.Country,
-			&tmp.City,
-			&tmp.Address,
-			&tmp.Logo,
-			&tmp.State,
-			&tmp.Remark,
+			&tmp.Email,
+			&tmp.Username,
+			&tmp.Balance,
+			&tmp.Password,
+			&tmp.Status,
+			&tmp.Ip,
 			&tmp.CreatedAt,
 			&tmp.UpdatedAt,
 			&tmp.DeletedAt,
@@ -732,43 +710,43 @@ func (s *S000001Company) RowsScanOne(custom func(get *hey.Get, where hey.Filter)
 	}, get)
 }
 
-func (s *S000001Company) RowsScanAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) string) (map[string]*Company, []*Company, error) {
+func (s *S0000001Account) RowsScanAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Account) string) (map[string]*Account, []*Account, error) {
 	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[string]*Company, len(all))
+	allMap := make(map[string]*Account, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-func (s *S000001Company) RowsScanAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int) (map[int]*Company, []*Company, error) {
+func (s *S0000001Account) RowsScanAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Account) int) (map[int]*Account, []*Account, error) {
 	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int]*Company, len(all))
+	allMap := make(map[int]*Account, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-func (s *S000001Company) RowsScanAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Company) int64) (map[int64]*Company, []*Company, error) {
+func (s *S0000001Account) RowsScanAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Account) int64) (map[int64]*Account, []*Account, error) {
 	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int64]*Company, len(all))
+	allMap := make(map[int64]*Account, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-func (s DELETECompany) PrimaryKey() interface{} {
+func (s DELETEAccount) PrimaryKey() interface{} {
 	if s.Id != nil {
 		return *s.Id
 	}
@@ -776,12 +754,12 @@ func (s DELETECompany) PrimaryKey() interface{} {
 }
 
 // PrimaryKey Table primary key column name.
-func (s *S000001Company) PrimaryKey() string {
+func (s *S0000001Account) PrimaryKey() string {
 	return s.ID
 }
 
 // PrimaryKeyUpdate Update based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -799,7 +777,7 @@ func (s *S000001Company) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom func
 }
 
 // PrimaryKeyHidden Hidden based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -826,7 +804,7 @@ func (s *S000001Company) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom func
 }
 
 // PrimaryKeyDelete Delete based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -843,7 +821,7 @@ func (s *S000001Company) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom func
 }
 
 // PrimaryKeyUpsert Upsert based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -868,7 +846,7 @@ func (s *S000001Company) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(ad
 }
 
 // PrimaryKeyUpdateAll Batch update based on primary key value.
-func (s *S000001Company) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Account) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -899,7 +877,7 @@ func (s *S000001Company) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, 
 }
 
 // PrimaryKeyHiddenAll Batch hidden based on primary key value.
-func (s *S000001Company) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Account) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -930,7 +908,7 @@ func (s *S000001Company) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, 
 }
 
 // PrimaryKeyDeleteAll Batch deletes it based on primary key value.
-func (s *S000001Company) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Account) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -961,7 +939,7 @@ func (s *S000001Company) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, 
 }
 
 // PrimaryKeyUpsertAll Batch upsert based on primary key value.
-func (s *S000001Company) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Account) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -1013,17 +991,17 @@ func (s *S000001Company) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, 
 }
 
 // PrimaryKeyEqual Build Filter PrimaryKey = value
-func (s *S000001Company) PrimaryKeyEqual(value interface{}) hey.Filter {
+func (s *S0000001Account) PrimaryKeyEqual(value interface{}) hey.Filter {
 	return s.way.F().Equal(s.PrimaryKey(), value)
 }
 
 // PrimaryKeyIn Build Filter PrimaryKey IN ( values... )
-func (s *S000001Company) PrimaryKeyIn(values ...interface{}) hey.Filter {
+func (s *S0000001Account) PrimaryKeyIn(values ...interface{}) hey.Filter {
 	return s.way.F().In(s.PrimaryKey(), values...)
 }
 
 // PrimaryKeyUpdateMap Update a row of data using map[string]interface{} by primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKeyValue == nil || len(modify) == 0 {
 		return 0, nil
 	}
@@ -1037,7 +1015,7 @@ func (s *S000001Company) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify
 }
 
 // PrimaryKeyUpsertMap Upsert a row of data using map[string]interface{} by primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error) {
+func (s *S0000001Account) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error) {
 	if len(upsert) == 0 {
 		return 0, nil
 	}
@@ -1058,7 +1036,7 @@ func (s *S000001Company) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert
 }
 
 // PrimaryKeySelectAll Query multiple records based on primary key values. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectAll(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) ([]*Company, error) {
+func (s *S0000001Account) PrimaryKeySelectAll(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) ([]*Account, error) {
 	return s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyIn(primaryKeyValues))
 		if custom != nil {
@@ -1068,7 +1046,7 @@ func (s *S000001Company) PrimaryKeySelectAll(primaryKeyValues interface{}, custo
 }
 
 // PrimaryKeySelectOne Query a piece of data based on the primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectOne(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+func (s *S0000001Account) PrimaryKeySelectOne(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Account, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		if custom != nil {
@@ -1078,7 +1056,7 @@ func (s *S000001Company) PrimaryKeySelectOne(primaryKeyValue interface{}, custom
 }
 
 // PrimaryKeySelectOneAsc Query a piece of data based on the primary key value. Additional conditions can be added in the filter. ORDER BY PrimaryKey ASC
-func (s *S000001Company) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+func (s *S0000001Account) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Account, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		get.Asc(s.PrimaryKey())
@@ -1089,7 +1067,7 @@ func (s *S000001Company) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, cus
 }
 
 // PrimaryKeySelectOneDesc Query a piece of data based on the primary key value. Additional conditions can be added in the filter. ORDER BY PrimaryKey DESC
-func (s *S000001Company) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Company, error) {
+func (s *S0000001Account) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Account, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		get.Desc(s.PrimaryKey())
@@ -1100,7 +1078,7 @@ func (s *S000001Company) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, cu
 }
 
 // PrimaryKeySelectExists Check whether the data exists based on the primary key value. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error) {
+func (s *S0000001Account) PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error) {
 	if primaryKeyValue == nil {
 		return false, nil
 	}
@@ -1117,7 +1095,7 @@ func (s *S000001Company) PrimaryKeySelectExists(primaryKeyValue interface{}, cus
 }
 
 // PrimaryKeySelectCount The number of statistics based on primary key values. Additional conditions can be added in the filter.
-func (s *S000001Company) PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error) {
+func (s *S0000001Account) PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error) {
 	if primaryKeyValues == nil {
 		return 0, nil
 	}
@@ -1129,18 +1107,18 @@ func (s *S000001Company) PrimaryKeySelectCount(primaryKeyValues interface{}, cus
 	})
 }
 
-// PrimaryKeySelectAllMap Make map[int]*Company and []*Company
-func (s *S000001Company) PrimaryKeySelectAllMap(primaryKeys interface{}, custom func(get *hey.Get, where hey.Filter)) (map[int]*Company, []*Company, error) {
+// PrimaryKeySelectAllMap Make map[int]*Account and []*Account
+func (s *S0000001Account) PrimaryKeySelectAllMap(primaryKeys interface{}, custom func(get *hey.Get, where hey.Filter)) (map[int]*Account, []*Account, error) {
 	return s.SelectAllMapInt(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyIn(primaryKeys))
 		if custom != nil {
 			custom(get, where)
 		}
-	}, func(v *Company) int { return v.Id })
+	}, func(v *Account) int { return v.Id })
 }
 
 // PrimaryKeyUpsertOne Update or Insert one.
-func (s *S000001Company) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error) {
+func (s *S0000001Account) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error) {
 	exists, err = s.SelectExists(func(query *hey.Get, where hey.Filter) {
 		query.Select(s.PrimaryKey())
 		where.Equal(s.PrimaryKey(), primaryKeyValue)
@@ -1169,14 +1147,14 @@ func (s *S000001Company) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert
 }
 
 // Backup Constructing a backup statement.
-func (s *S000001Company) Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
+func (s *S0000001Account) Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
 	if backup == nil {
 		return nil
 	}
 	var idMin int
 	var affectedRows int64
 	var err error
-	var lists []*Company
+	var lists []*Account
 	for {
 		lists, err = s.RowsScanAll(func(get *hey.Get, where hey.Filter) {
 			where.GreaterThan(s.PrimaryKey(), idMin)
@@ -1204,7 +1182,7 @@ func (s *S000001Company) Backup(limit int64, custom func(get *hey.Get, where hey
 }
 
 // NotFoundInsert If it does not exist, it will be created.
-func (s *S000001Company) NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error) {
+func (s *S0000001Account) NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error) {
 	exists, err = s.SelectExists(get)
 	if err != nil {
 		return
@@ -1217,7 +1195,7 @@ func (s *S000001Company) NotFoundInsert(create interface{}, get func(get *hey.Ge
 }
 
 // Truncate Clear all data in the table.
-func (s *S000001Company) Truncate(ctx context.Context) (int64, error) {
+func (s *S0000001Account) Truncate(ctx context.Context) (int64, error) {
 	table := s.way.Replace(s.table)
 	if ctx == nil {
 		ctx = context.Background()
@@ -1236,17 +1214,17 @@ func (s *S000001Company) Truncate(ctx context.Context) (int64, error) {
 }
 
 // ValueStruct struct value
-func (s *S000001Company) ValueStruct() interface{} {
-	return Company{}
+func (s *S0000001Account) ValueStruct() interface{} {
+	return Account{}
 }
 
 // ValueStructPtr struct pointer value
-func (s *S000001Company) ValueStructPtr() interface{} {
-	return &Company{}
+func (s *S0000001Account) ValueStructPtr() interface{} {
+	return &Account{}
 }
 
 // ValueSliceStruct slice struct value
-func (s *S000001Company) ValueSliceStruct(capacities ...int) interface{} {
+func (s *S0000001Account) ValueSliceStruct(capacities ...int) interface{} {
 	capacity := 8
 	for i := len(capacities) - 1; i >= 0; i++ {
 		if capacities[i] >= 0 {
@@ -1254,11 +1232,11 @@ func (s *S000001Company) ValueSliceStruct(capacities ...int) interface{} {
 			break
 		}
 	}
-	return make([]Company, 0, capacity)
+	return make([]Account, 0, capacity)
 }
 
 // ValueSliceStructPtr slice struct pointer value
-func (s *S000001Company) ValueSliceStructPtr(capacities ...int) interface{} {
+func (s *S0000001Account) ValueSliceStructPtr(capacities ...int) interface{} {
 	capacity := 8
 	for i := len(capacities) - 1; i >= 0; i++ {
 		if capacities[i] >= 0 {
@@ -1266,106 +1244,102 @@ func (s *S000001Company) ValueSliceStructPtr(capacities ...int) interface{} {
 			break
 		}
 	}
-	return make([]*Company, 0, capacity)
+	return make([]*Account, 0, capacity)
 }
 
-func (s *S000001Company) Alias(aliases ...string) *S000001CompanyAlias {
+func (s *S0000001Account) Alias(aliases ...string) *S0000001AccountAlias {
 	alias := s.table
 	if tmp := hey.LastNotEmptyString(aliases); tmp != "" {
 		alias = tmp
 	}
 	table := s.way.T().SetAlias(alias)
 	column := func(column string) string { return table.Column(column) }
-	tmp := &S000001CompanyAlias{
-		ID:         column(s.ID),         // id
-		PID:        column(s.PID),        // pid
-		NAME:       column(s.NAME),       // name
-		COUNTRY:    column(s.COUNTRY),    // country
-		CITY:       column(s.CITY),       // city
-		ADDRESS:    column(s.ADDRESS),    // address
-		LOGO:       column(s.LOGO),       // logo
-		STATE:      column(s.STATE),      // state
-		REMARK:     column(s.REMARK),     // remark
-		CREATED_AT: column(s.CREATED_AT), // created_at
-		UPDATED_AT: column(s.UPDATED_AT), // updated_at
-		DELETED_AT: column(s.DELETED_AT), // deleted_at
+	tmp := &S0000001AccountAlias{
+		ID:         column(s.ID),         // id comment
+		EMAIL:      column(s.EMAIL),      // email comment
+		USERNAME:   column(s.USERNAME),   // username comment
+		BALANCE:    column(s.BALANCE),    // balance comment
+		PASSWORD:   column(s.PASSWORD),   // balance password
+		STATUS:     column(s.STATUS),     // status comment
+		IP:         column(s.IP),         // ip comment
+		CREATED_AT: column(s.CREATED_AT), // created_at comment
+		UPDATED_AT: column(s.UPDATED_AT), // updated_at comment
+		DELETED_AT: column(s.DELETED_AT), // deleted_at comment
 
 		table: s.table,
 		alias: alias,
 	}
-	tmp.S000001Company = s
+	tmp.S0000001Account = s
 	tmp.tableColumn = table
 	return tmp
 }
 
-func (s *S000001Company) AliasA() *S000001CompanyAlias {
+func (s *S0000001Account) AliasA() *S0000001AccountAlias {
 	return s.Alias(hey.AliasA)
 }
 
-func (s *S000001Company) AliasB() *S000001CompanyAlias {
+func (s *S0000001Account) AliasB() *S0000001AccountAlias {
 	return s.Alias(hey.AliasB)
 }
 
-func (s *S000001Company) AliasC() *S000001CompanyAlias {
+func (s *S0000001Account) AliasC() *S0000001AccountAlias {
 	return s.Alias(hey.AliasC)
 }
 
-func (s *S000001Company) AliasD() *S000001CompanyAlias {
+func (s *S0000001Account) AliasD() *S0000001AccountAlias {
 	return s.Alias(hey.AliasD)
 }
 
-func (s *S000001Company) AliasE() *S000001CompanyAlias {
+func (s *S0000001Account) AliasE() *S0000001AccountAlias {
 	return s.Alias(hey.AliasE)
 }
 
-func (s *S000001Company) AliasF() *S000001CompanyAlias {
+func (s *S0000001Account) AliasF() *S0000001AccountAlias {
 	return s.Alias(hey.AliasF)
 }
 
-func (s *S000001Company) AliasG() *S000001CompanyAlias {
+func (s *S0000001Account) AliasG() *S0000001AccountAlias {
 	return s.Alias(hey.AliasG)
 }
 
-type S000001CompanyAlias struct {
-	*S000001Company
+type S0000001AccountAlias struct {
+	*S0000001Account
 	tableColumn *hey.TableColumn
 
-	ID         string // id
-	PID        string // pid
-	NAME       string // name
-	COUNTRY    string // country
-	CITY       string // city
-	ADDRESS    string // address
-	LOGO       string // logo
-	STATE      string // state
-	REMARK     string // remark
-	CREATED_AT string // created_at
-	UPDATED_AT string // updated_at
-	DELETED_AT string // deleted_at
+	ID         string // id comment
+	EMAIL      string // email comment
+	USERNAME   string // username comment
+	BALANCE    string // balance comment
+	PASSWORD   string // balance password
+	STATUS     string // status comment
+	IP         string // ip comment
+	CREATED_AT string // created_at comment
+	UPDATED_AT string // updated_at comment
+	DELETED_AT string // deleted_at comment
 
 	table string
 	alias string
 }
 
-func (s *S000001CompanyAlias) Table() string {
+func (s *S0000001AccountAlias) Table() string {
 	return s.table
 }
 
-func (s *S000001CompanyAlias) Alias() string {
+func (s *S0000001AccountAlias) Alias() string {
 	if s.alias != "" {
 		return s.alias
 	}
 	return s.Table()
 }
 
-func (s *S000001CompanyAlias) Model() *S000001Company {
-	return s.S000001Company
+func (s *S0000001AccountAlias) Model() *S0000001Account {
+	return s.S0000001Account
 }
 
-func (s *S000001CompanyAlias) TableColumn() *hey.TableColumn {
+func (s *S0000001AccountAlias) TableColumn() *hey.TableColumn {
 	return s.tableColumn
 }
 
-func (s *S000001CompanyAlias) Column(except ...string) []string {
+func (s *S0000001AccountAlias) Column(except ...string) []string {
 	return s.TableColumn().ColumnAll(s.Model().Column(except...)...)
 }

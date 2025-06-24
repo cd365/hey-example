@@ -1,4 +1,4 @@
-// code template version: v3.0.0 a1e877e692cab7668466ba74010a8e88e78e039e 1748326418-20250527141338
+// code template version: v3.0.0 e9ec97f8959c580123ea8ffbcfd1e2961fc08160 1750737071-20250624115111
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -14,43 +14,25 @@ import (
 	"strings"
 )
 
-// Employee | employee | employee
-type Employee struct {
-	Id         int     `json:"id" db:"id"`                 // id
-	CompanyId  int     `json:"company_id" db:"company_id"` // company_id
-	Name       string  `json:"name" db:"name"`             // name
-	Age        int     `json:"age" db:"age"`               // age
-	Birthday   string  `json:"birthday" db:"birthday"`     // birthday
-	Gender     string  `json:"gender" db:"gender"`         // gender unknown OR male OR female
-	Height     float64 `json:"height" db:"height"`         // height unit: cm
-	Weight     float64 `json:"weight" db:"weight"`         // weight unit: kg
-	Health     float64 `json:"health" db:"health"`         // health value
-	Salary     float64 `json:"salary" db:"salary"`         // salary
-	Department string  `json:"department" db:"department"` // department
-	State      int     `json:"state" db:"state"`           // state
-	Remark     string  `json:"remark" db:"remark"`         // remark
-	CreatedAt  int64   `json:"created_at" db:"created_at"` // created_at
-	UpdatedAt  int64   `json:"updated_at" db:"updated_at"` // updated_at
-	DeletedAt  int64   `json:"deleted_at" db:"deleted_at"` // deleted_at
+// Article | article | article comment
+type Article struct {
+	Id        int    `json:"id" db:"id"`                 // id comment
+	AccountId int    `json:"account_id" db:"account_id"` // account_id comment
+	Title     string `json:"title" db:"title"`           // title comment
+	Content   string `json:"content" db:"content"`       // content comment
+	Stars     int64  `json:"stars" db:"stars"`           // stars comment
+	CreatedAt int64  `json:"created_at" db:"created_at"` // created_at comment
+	UpdatedAt int64  `json:"updated_at" db:"updated_at"` // updated_at comment
 }
 
-type S000001Employee struct {
-	ID         string // id
-	COMPANY_ID string // company_id
-	NAME       string // name
-	AGE        string // age
-	BIRTHDAY   string // birthday
-	GENDER     string // gender unknown OR male OR female
-	HEIGHT     string // height unit: cm
-	WEIGHT     string // weight unit: kg
-	HEALTH     string // health value
-	SALARY     string // salary
-	DEPARTMENT string // department
-	STATE      string // state
-	REMARK     string // remark
-	CREATED_AT string // created_at
-	UPDATED_AT string // updated_at
-	DELETED_AT string // deleted_at
+type S0000001Article struct {
+	ID         string // id comment
+	ACCOUNT_ID string // account_id comment
+	TITLE      string // title comment
+	CONTENT    string // content comment
+	STARS      string // stars comment
+	CREATED_AT string // created_at comment
+	UPDATED_AT string // updated_at comment
 
 	table   string
 	comment string
@@ -65,19 +47,19 @@ type S000001Employee struct {
 	way   *hey.Way
 }
 
-func (s *S000001Employee) Basic() *abc.BASIC {
+func (s *S0000001Article) Basic() *abc.BASIC {
 	return s.basic
 }
 
-func (s *S000001Employee) Table() string {
+func (s *S0000001Article) Table() string {
 	return s.table
 }
 
-func (s *S000001Employee) Comment() string {
+func (s *S0000001Article) Comment() string {
 	return s.comment
 }
 
-func (s *S000001Employee) Column(except ...string) []string {
+func (s *S0000001Article) Column(except ...string) []string {
 	excepted := make(map[string]*struct{}, len(except))
 	for _, v := range except {
 		excepted[v] = &struct{}{}
@@ -92,7 +74,7 @@ func (s *S000001Employee) Column(except ...string) []string {
 	return result
 }
 
-func (s *S000001Employee) ColumnMap() map[string]*struct{} {
+func (s *S0000001Article) ColumnMap() map[string]*struct{} {
 	result := make(map[string]*struct{}, len(s.columnMap))
 	for k, v := range s.columnMap {
 		result[k] = v
@@ -100,16 +82,16 @@ func (s *S000001Employee) ColumnMap() map[string]*struct{} {
 	return result
 }
 
-func (s *S000001Employee) ColumnString() string {
-	return `"id", "company_id", "name", "age", "birthday", "gender", "height", "weight", "health", "salary", "department", "state", "remark", "created_at", "updated_at", "deleted_at"`
+func (s *S0000001Article) ColumnString() string {
+	return `"id", "account_id", "title", "content", "stars", "created_at", "updated_at"`
 }
 
-func (s *S000001Employee) ColumnExist(column string) bool {
+func (s *S0000001Article) ColumnExist(column string) bool {
 	_, exist := s.columnMap[column]
 	return exist
 }
 
-func (s *S000001Employee) ColumnPermit(permit ...string) []string {
+func (s *S0000001Article) ColumnPermit(permit ...string) []string {
 	result := make([]string, 0, len(permit))
 	for _, v := range permit {
 		if ok := s.ColumnExist(v); ok {
@@ -119,7 +101,7 @@ func (s *S000001Employee) ColumnPermit(permit ...string) []string {
 	return result
 }
 
-func (s *S000001Employee) ColumnValue(columnValue ...interface{}) map[string]interface{} {
+func (s *S0000001Article) ColumnValue(columnValue ...interface{}) map[string]interface{} {
 	length := len(columnValue)
 	if length == 0 || length&1 == 1 {
 		return nil
@@ -141,23 +123,23 @@ func (s *S000001Employee) ColumnValue(columnValue ...interface{}) map[string]int
 	return result
 }
 
-func (s *S000001Employee) ColumnAutoIncr() []string {
+func (s *S0000001Article) ColumnAutoIncr() []string {
 	return []string{s.ID}
 }
 
-func (s *S000001Employee) ColumnCreatedAt() []string {
+func (s *S0000001Article) ColumnCreatedAt() []string {
 	return []string{s.CREATED_AT}
 }
 
-func (s *S000001Employee) ColumnUpdatedAt() []string {
+func (s *S0000001Article) ColumnUpdatedAt() []string {
 	return []string{s.UPDATED_AT}
 }
 
-func (s *S000001Employee) ColumnDeletedAt() []string {
-	return []string{s.DELETED_AT}
+func (s *S0000001Article) ColumnDeletedAt() []string {
+	return nil
 }
 
-func (s *S000001Employee) Filter(filters ...func(f hey.Filter)) hey.Filter {
+func (s *S0000001Article) Filter(filters ...func(f hey.Filter)) hey.Filter {
 	filter := s.way.F()
 	for _, tmp := range filters {
 		if tmp != nil {
@@ -167,11 +149,11 @@ func (s *S000001Employee) Filter(filters ...func(f hey.Filter)) hey.Filter {
 	return filter
 }
 
-func (s *S000001Employee) Way(ways ...*hey.Way) *hey.Way {
+func (s *S0000001Article) Way(ways ...*hey.Way) *hey.Way {
 	return abc.Way(s.way, ways...)
 }
 
-func (s *S000001Employee) Add(ways ...*hey.Way) *hey.Add {
+func (s *S0000001Article) Add(ways ...*hey.Way) *hey.Add {
 	excepts := s.ColumnAutoIncr()
 	return s.Way(ways...).Add(s.Table()).
 		ExceptPermit(
@@ -182,11 +164,11 @@ func (s *S000001Employee) Add(ways ...*hey.Way) *hey.Add {
 		)
 }
 
-func (s *S000001Employee) Del(ways ...*hey.Way) *hey.Del {
+func (s *S0000001Article) Del(ways ...*hey.Way) *hey.Del {
 	return s.Way(ways...).Del(s.Table())
 }
 
-func (s *S000001Employee) Mod(ways ...*hey.Way) *hey.Mod {
+func (s *S0000001Article) Mod(ways ...*hey.Way) *hey.Mod {
 	excepts := s.ColumnAutoIncr()
 	excepts = append(excepts, s.ColumnCreatedAt()...)
 	return s.Way(ways...).Mod(s.Table()).
@@ -198,11 +180,11 @@ func (s *S000001Employee) Mod(ways ...*hey.Way) *hey.Mod {
 		)
 }
 
-func (s *S000001Employee) Get(ways ...*hey.Way) *hey.Get {
+func (s *S0000001Article) Get(ways ...*hey.Way) *hey.Get {
 	return s.Way(ways...).Get(s.Table()).Select(s.columnSlice...)
 }
 
-func (s *S000001Employee) Available() hey.Filter {
+func (s *S0000001Article) Available() hey.Filter {
 	return s.Filter(func(f hey.Filter) {
 		for _, v := range s.ColumnDeletedAt() {
 			f.Equal(v, 0)
@@ -210,12 +192,12 @@ func (s *S000001Employee) Available() hey.Filter {
 	})
 }
 
-func (s *S000001Employee) Debugger(cmder hey.Cmder) {
-	s.way.Debugger(cmder)
+func (s *S0000001Article) Debug(cmder hey.Cmder) {
+	s.way.Debug(cmder)
 }
 
 // AddOne Insert a record and return the auto-increment id.
-func (s *S000001Employee) AddOne(create interface{}, custom func(add *hey.Add)) (int64, error) {
+func (s *S0000001Article) AddOne(create interface{}, custom func(add *hey.Add)) (int64, error) {
 	if create == nil {
 		return 0, nil
 	}
@@ -245,7 +227,7 @@ func (s *S000001Employee) AddOne(create interface{}, custom func(add *hey.Add)) 
 }
 
 // Insert SQL INSERT.
-func (s *S000001Employee) Insert(create interface{}, custom func(add *hey.Add)) (int64, error) {
+func (s *S0000001Article) Insert(create interface{}, custom func(add *hey.Add)) (int64, error) {
 	if create == nil {
 		return 0, nil
 	}
@@ -274,7 +256,7 @@ func (s *S000001Employee) Insert(create interface{}, custom func(add *hey.Add)) 
 }
 
 // Delete SQL DELETE.
-func (s *S000001Employee) Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) Delete(custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	if custom == nil {
 		return 0, nil
 	}
@@ -290,7 +272,7 @@ func (s *S000001Employee) Delete(custom func(del *hey.Del, where hey.Filter)) (i
 }
 
 // Update SQL UPDATE.
-func (s *S000001Employee) Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) Update(update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if update == nil {
 		return 0, nil
 	}
@@ -312,7 +294,7 @@ func (s *S000001Employee) Update(update func(mod *hey.Mod, where hey.Filter)) (i
 }
 
 // InsertSelect SQL INSERT and SELECT.
-func (s *S000001Employee) InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error) {
+func (s *S0000001Article) InsertSelect(columns []string, get *hey.Get, way *hey.Way) (int64, error) {
 	if len(columns) == 0 || get == nil {
 		return 0, nil
 	}
@@ -322,7 +304,7 @@ func (s *S000001Employee) InsertSelect(columns []string, get *hey.Get, way *hey.
 }
 
 // SelectCount SQL SELECT COUNT.
-func (s *S000001Employee) SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) SelectCount(custom func(get *hey.Get, where hey.Filter)) (int64, error) {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
@@ -332,7 +314,7 @@ func (s *S000001Employee) SelectCount(custom func(get *hey.Get, where hey.Filter
 }
 
 // SelectQuery SQL SELECT.
-func (s *S000001Employee) SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error {
+func (s *S0000001Article) SelectQuery(custom func(get *hey.Get, where hey.Filter), query func(rows *sql.Rows) error) error {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
@@ -342,12 +324,12 @@ func (s *S000001Employee) SelectQuery(custom func(get *hey.Get, where hey.Filter
 }
 
 // EmptySlice Initialize an empty slice.
-func (s *S000001Employee) EmptySlice() []*Employee {
-	return make([]*Employee, 0)
+func (s *S0000001Article) EmptySlice() []*Article {
+	return make([]*Article, 0)
 }
 
 // SelectGet SQL SELECT.
-func (s *S000001Employee) SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error {
+func (s *S0000001Article) SelectGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) error {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
@@ -357,7 +339,7 @@ func (s *S000001Employee) SelectGet(custom func(get *hey.Get, where hey.Filter),
 }
 
 // SelectAll SQL SELECT ALL.
-func (s *S000001Employee) SelectAll(custom func(get *hey.Get, where hey.Filter)) ([]*Employee, error) {
+func (s *S0000001Article) SelectAll(custom func(get *hey.Get, where hey.Filter)) ([]*Article, error) {
 	lists := s.EmptySlice()
 	if err := s.SelectGet(custom, &lists); err != nil {
 		return nil, err
@@ -366,7 +348,7 @@ func (s *S000001Employee) SelectAll(custom func(get *hey.Get, where hey.Filter))
 }
 
 // SelectOne SQL SELECT ONE.
-func (s *S000001Employee) SelectOne(custom func(get *hey.Get, where hey.Filter)) (*Employee, error) {
+func (s *S0000001Article) SelectOne(custom func(get *hey.Get, where hey.Filter)) (*Article, error) {
 	all, err := s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		if custom != nil {
 			custom(get, where)
@@ -383,7 +365,7 @@ func (s *S000001Employee) SelectOne(custom func(get *hey.Get, where hey.Filter))
 }
 
 // SelectExists SQL SELECT EXISTS.
-func (s *S000001Employee) SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error) {
+func (s *S0000001Article) SelectExists(custom func(get *hey.Get, where hey.Filter)) (bool, error) {
 	exists, err := s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		if custom != nil {
 			custom(get, where)
@@ -397,13 +379,13 @@ func (s *S000001Employee) SelectExists(custom func(get *hey.Get, where hey.Filte
 }
 
 // SelectCountAll SQL SELECT COUNT + ALL.
-func (s *S000001Employee) SelectCountAll(custom func(get *hey.Get, where hey.Filter)) (int64, []*Employee, error) {
+func (s *S0000001Article) SelectCountAll(custom func(get *hey.Get, where hey.Filter)) (int64, []*Article, error) {
 	count, err := s.SelectCount(custom)
 	if err != nil {
 		return 0, nil, err
 	}
 	if count == 0 {
-		return 0, make([]*Employee, 0), nil
+		return 0, make([]*Article, 0), nil
 	}
 	all, err := s.SelectAll(custom)
 	if err != nil {
@@ -413,7 +395,7 @@ func (s *S000001Employee) SelectCountAll(custom func(get *hey.Get, where hey.Fil
 }
 
 // SelectCountGet SQL SELECT COUNT + GET.
-func (s *S000001Employee) SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error) {
+func (s *S0000001Article) SelectCountGet(custom func(get *hey.Get, where hey.Filter), receive interface{}) (int64, error) {
 	count, err := s.SelectCount(custom)
 	if err != nil {
 		return 0, err
@@ -427,39 +409,39 @@ func (s *S000001Employee) SelectCountGet(custom func(get *hey.Get, where hey.Fil
 	return count, nil
 }
 
-// SelectAllMap Make map[string]*Employee
-func (s *S000001Employee) SelectAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Employee) string) (map[string]*Employee, []*Employee, error) {
+// SelectAllMap Make map[string]*Article
+func (s *S0000001Article) SelectAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Article) string) (map[string]*Article, []*Article, error) {
 	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[string]*Employee, len(all))
+	allMap := make(map[string]*Article, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-// SelectAllMapInt Make map[int]*Employee
-func (s *S000001Employee) SelectAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Employee) int) (map[int]*Employee, []*Employee, error) {
+// SelectAllMapInt Make map[int]*Article
+func (s *S0000001Article) SelectAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Article) int) (map[int]*Article, []*Article, error) {
 	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int]*Employee, len(all))
+	allMap := make(map[int]*Article, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-// SelectAllMapInt64 Make map[int64]*Employee
-func (s *S000001Employee) SelectAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Employee) int64) (map[int64]*Employee, []*Employee, error) {
+// SelectAllMapInt64 Make map[int64]*Article
+func (s *S0000001Article) SelectAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Article) int64) (map[int64]*Article, []*Article, error) {
 	all, err := s.SelectAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int64]*Employee, len(all))
+	allMap := make(map[int64]*Article, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
@@ -467,7 +449,7 @@ func (s *S000001Employee) SelectAllMapInt64(custom func(get *hey.Get, where hey.
 }
 
 // DeleteByColumn Delete by column values. Additional conditions can be added in the filters. No transaction support.
-func (s *S000001Employee) DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) DeleteByColumn(column string, values interface{}, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	return s.Delete(func(del *hey.Del, where hey.Filter) {
 		where.In(column, values)
 		if custom != nil {
@@ -477,7 +459,7 @@ func (s *S000001Employee) DeleteByColumn(column string, values interface{}, cust
 }
 
 // UpdateByColumn Update by column values. Additional conditions can be added in the filters. No transaction support.
-func (s *S000001Employee) UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) UpdateByColumn(column string, values interface{}, update interface{}, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if update == nil {
 		return 0, nil
 	}
@@ -491,7 +473,7 @@ func (s *S000001Employee) UpdateByColumn(column string, values interface{}, upda
 }
 
 // SelectAllByColumn Select all by column values. No transaction support.
-func (s *S000001Employee) SelectAllByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) ([]*Employee, error) {
+func (s *S0000001Article) SelectAllByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) ([]*Article, error) {
 	return s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -504,7 +486,7 @@ func (s *S000001Employee) SelectAllByColumn(column string, values interface{}, c
 }
 
 // SelectOneByColumn Select one by column values. No transaction support.
-func (s *S000001Employee) SelectOneByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (*Employee, error) {
+func (s *S0000001Article) SelectOneByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (*Article, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -517,7 +499,7 @@ func (s *S000001Employee) SelectOneByColumn(column string, values interface{}, c
 }
 
 // SelectExistsByColumn Select exists by column values. No transaction support.
-func (s *S000001Employee) SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error) {
+func (s *S0000001Article) SelectExistsByColumn(column string, values interface{}, customs ...func(get *hey.Get, where hey.Filter)) (bool, error) {
 	return s.SelectExists(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -530,7 +512,7 @@ func (s *S000001Employee) SelectExistsByColumn(column string, values interface{}
 }
 
 // SelectGetByColumn Select get by column values. No transaction support.
-func (s *S000001Employee) SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error {
+func (s *S0000001Article) SelectGetByColumn(column string, values interface{}, receive interface{}, customs ...func(get *hey.Get, where hey.Filter)) error {
 	return s.SelectGet(func(get *hey.Get, where hey.Filter) {
 		where.In(column, values)
 		for _, custom := range customs {
@@ -543,7 +525,7 @@ func (s *S000001Employee) SelectGetByColumn(column string, values interface{}, r
 }
 
 // DeleteInsert Delete first and then insert.
-func (s *S000001Employee) DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error) {
+func (s *S0000001Article) DeleteInsert(del func(del *hey.Del, where hey.Filter), create interface{}, add func(add *hey.Add)) (deleteResult int64, insertResult int64, err error) {
 	if deleteResult, err = s.Delete(del); err != nil {
 		return
 	}
@@ -552,83 +534,47 @@ func (s *S000001Employee) DeleteInsert(del func(del *hey.Del, where hey.Filter),
 }
 
 // Border SQL identifier boundary characters.
-func (s *S000001Employee) Border() string {
+func (s *S0000001Article) Border() string {
 	return s.border
 }
 
-func (s *S000001Employee) initial() *S000001Employee {
-	s.ID = "id"                 // id
-	s.COMPANY_ID = "company_id" // company_id
-	s.NAME = "name"             // name
-	s.AGE = "age"               // age
-	s.BIRTHDAY = "birthday"     // birthday
-	s.GENDER = "gender"         // gender unknown OR male OR female
-	s.HEIGHT = "height"         // height unit: cm
-	s.WEIGHT = "weight"         // weight unit: kg
-	s.HEALTH = "health"         // health value
-	s.SALARY = "salary"         // salary
-	s.DEPARTMENT = "department" // department
-	s.STATE = "state"           // state
-	s.REMARK = "remark"         // remark
-	s.CREATED_AT = "created_at" // created_at
-	s.UPDATED_AT = "updated_at" // updated_at
-	s.DELETED_AT = "deleted_at" // deleted_at
+func (s *S0000001Article) initial() *S0000001Article {
+	s.ID = "id"                 // id comment
+	s.ACCOUNT_ID = "account_id" // account_id comment
+	s.TITLE = "title"           // title comment
+	s.CONTENT = "content"       // content comment
+	s.STARS = "stars"           // stars comment
+	s.CREATED_AT = "created_at" // created_at comment
+	s.UPDATED_AT = "updated_at" // updated_at comment
 
 	s.columnMap = map[string]*struct{}{
-		s.ID:         {}, // id
-		s.COMPANY_ID: {}, // company_id
-		s.NAME:       {}, // name
-		s.AGE:        {}, // age
-		s.BIRTHDAY:   {}, // birthday
-		s.GENDER:     {}, // gender unknown OR male OR female
-		s.HEIGHT:     {}, // height unit: cm
-		s.WEIGHT:     {}, // weight unit: kg
-		s.HEALTH:     {}, // health value
-		s.SALARY:     {}, // salary
-		s.DEPARTMENT: {}, // department
-		s.STATE:      {}, // state
-		s.REMARK:     {}, // remark
-		s.CREATED_AT: {}, // created_at
-		s.UPDATED_AT: {}, // updated_at
-		s.DELETED_AT: {}, // deleted_at
+		s.ID:         {}, // id comment
+		s.ACCOUNT_ID: {}, // account_id comment
+		s.TITLE:      {}, // title comment
+		s.CONTENT:    {}, // content comment
+		s.STARS:      {}, // stars comment
+		s.CREATED_AT: {}, // created_at comment
+		s.UPDATED_AT: {}, // updated_at comment
 	}
 
 	s.columnSlice = []string{
-		s.ID,         // id
-		s.COMPANY_ID, // company_id
-		s.NAME,       // name
-		s.AGE,        // age
-		s.BIRTHDAY,   // birthday
-		s.GENDER,     // gender unknown OR male OR female
-		s.HEIGHT,     // height unit: cm
-		s.WEIGHT,     // weight unit: kg
-		s.HEALTH,     // health value
-		s.SALARY,     // salary
-		s.DEPARTMENT, // department
-		s.STATE,      // state
-		s.REMARK,     // remark
-		s.CREATED_AT, // created_at
-		s.UPDATED_AT, // updated_at
-		s.DELETED_AT, // deleted_at
+		s.ID,         // id comment
+		s.ACCOUNT_ID, // account_id comment
+		s.TITLE,      // title comment
+		s.CONTENT,    // content comment
+		s.STARS,      // stars comment
+		s.CREATED_AT, // created_at comment
+		s.UPDATED_AT, // updated_at comment
 	}
 
 	s.columnIndex = map[string]int{
-		s.ID:         0,  // id
-		s.COMPANY_ID: 1,  // company_id
-		s.NAME:       2,  // name
-		s.AGE:        3,  // age
-		s.BIRTHDAY:   4,  // birthday
-		s.GENDER:     5,  // gender unknown OR male OR female
-		s.HEIGHT:     6,  // height unit: cm
-		s.WEIGHT:     7,  // weight unit: kg
-		s.HEALTH:     8,  // health value
-		s.SALARY:     9,  // salary
-		s.DEPARTMENT: 10, // department
-		s.STATE:      11, // state
-		s.REMARK:     12, // remark
-		s.CREATED_AT: 13, // created_at
-		s.UPDATED_AT: 14, // updated_at
-		s.DELETED_AT: 15, // deleted_at
+		s.ID:         0, // id comment
+		s.ACCOUNT_ID: 1, // account_id comment
+		s.TITLE:      2, // title comment
+		s.CONTENT:    3, // content comment
+		s.STARS:      4, // stars comment
+		s.CREATED_AT: 5, // created_at comment
+		s.UPDATED_AT: 6, // updated_at comment
 	}
 
 	replace := s.way.GetCfg().Manual.Replace
@@ -641,31 +587,22 @@ func (s *S000001Employee) initial() *S000001Employee {
 		}
 		newest = fmt.Sprintf("%s%s%s", s.border, newest, s.border)
 		replace.Set(table, newest)
-		replace.Set(s.ID, `"id"`)                 // id
-		replace.Set(s.COMPANY_ID, `"company_id"`) // company_id
-		replace.Set(s.NAME, `"name"`)             // name
-		replace.Set(s.AGE, `"age"`)               // age
-		replace.Set(s.BIRTHDAY, `"birthday"`)     // birthday
-		replace.Set(s.GENDER, `"gender"`)         // gender unknown OR male OR female
-		replace.Set(s.HEIGHT, `"height"`)         // height unit: cm
-		replace.Set(s.WEIGHT, `"weight"`)         // weight unit: kg
-		replace.Set(s.HEALTH, `"health"`)         // health value
-		replace.Set(s.SALARY, `"salary"`)         // salary
-		replace.Set(s.DEPARTMENT, `"department"`) // department
-		replace.Set(s.STATE, `"state"`)           // state
-		replace.Set(s.REMARK, `"remark"`)         // remark
-		replace.Set(s.CREATED_AT, `"created_at"`) // created_at
-		replace.Set(s.UPDATED_AT, `"updated_at"`) // updated_at
-		replace.Set(s.DELETED_AT, `"deleted_at"`) // deleted_at
+		replace.Set(s.ID, `"id"`)                 // id comment
+		replace.Set(s.ACCOUNT_ID, `"account_id"`) // account_id comment
+		replace.Set(s.TITLE, `"title"`)           // title comment
+		replace.Set(s.CONTENT, `"content"`)       // content comment
+		replace.Set(s.STARS, `"stars"`)           // stars comment
+		replace.Set(s.CREATED_AT, `"created_at"`) // created_at comment
+		replace.Set(s.UPDATED_AT, `"updated_at"`) // updated_at comment
 
 	}
 	return s
 }
 
-func newS000001Employee(basic abc.BASIC, way *hey.Way) *S000001Employee {
-	s := &S000001Employee{}
-	s.table = "public.employee"
-	s.comment = "employee"
+func newS0000001Article(basic abc.BASIC, way *hey.Way) *S0000001Article {
+	s := &S0000001Article{}
+	s.table = "article"
+	s.comment = "article comment"
 	s.border = `"`
 	s.basic = &basic
 	s.way = way
@@ -673,146 +610,112 @@ func newS000001Employee(basic abc.BASIC, way *hey.Way) *S000001Employee {
 	return s
 }
 
-type INSERTEmployee struct {
-	CompanyId  int     `json:"company_id" db:"company_id" validate:"omitempty"`              // company_id
-	Name       string  `json:"name" db:"name" validate:"omitempty,min=0,max=32"`             // name
-	Age        int     `json:"age" db:"age" validate:"omitempty"`                            // age
-	Birthday   string  `json:"birthday" db:"birthday" validate:"omitempty,min=0,max=10"`     // birthday
-	Gender     string  `json:"gender" db:"gender" validate:"omitempty,min=0,max=16"`         // gender unknown OR male OR female
-	Height     float64 `json:"height" db:"height" validate:"omitempty"`                      // height unit: cm
-	Weight     float64 `json:"weight" db:"weight" validate:"omitempty"`                      // weight unit: kg
-	Health     float64 `json:"health" db:"health" validate:"omitempty"`                      // health value
-	Salary     float64 `json:"salary" db:"salary" validate:"omitempty"`                      // salary
-	Department string  `json:"department" db:"department" validate:"omitempty,min=0,max=32"` // department
-	State      int     `json:"state" db:"state" validate:"omitempty"`                        // state
-	Remark     string  `json:"remark" db:"remark" validate:"omitempty"`                      // remark
+type INSERTArticle struct {
+	AccountId int    `json:"account_id" db:"account_id" validate:"omitempty"`     // account_id comment
+	Title     string `json:"title" db:"title" validate:"omitempty,min=0,max=255"` // title comment
+	Content   string `json:"content" db:"content" validate:"omitempty"`           // content comment
+	Stars     int64  `json:"stars" db:"stars" validate:"omitempty"`               // stars comment
 }
 
-func (s INSERTEmployee) PrimaryKey() interface{} {
+func (s INSERTArticle) PrimaryKey() interface{} {
 	return nil
 }
 
-type DELETEEmployee struct {
-	Id *int `json:"id" db:"id" validate:"required,min=1"` // id
+type DELETEArticle struct {
+	Id *int `json:"id" db:"id" validate:"required,min=1"` // id comment
 }
 
-type UPDATEEmployee struct {
-	DELETEEmployee
-	CompanyId  *int     `json:"company_id" db:"company_id" validate:"omitempty"`              // company_id
-	Name       *string  `json:"name" db:"name" validate:"omitempty,min=0,max=32"`             // name
-	Age        *int     `json:"age" db:"age" validate:"omitempty"`                            // age
-	Birthday   *string  `json:"birthday" db:"birthday" validate:"omitempty,min=0,max=10"`     // birthday
-	Gender     *string  `json:"gender" db:"gender" validate:"omitempty,min=0,max=16"`         // gender unknown OR male OR female
-	Height     *float64 `json:"height" db:"height" validate:"omitempty"`                      // height unit: cm
-	Weight     *float64 `json:"weight" db:"weight" validate:"omitempty"`                      // weight unit: kg
-	Health     *float64 `json:"health" db:"health" validate:"omitempty"`                      // health value
-	Salary     *float64 `json:"salary" db:"salary" validate:"omitempty"`                      // salary
-	Department *string  `json:"department" db:"department" validate:"omitempty,min=0,max=32"` // department
-	State      *int     `json:"state" db:"state" validate:"omitempty"`                        // state
-	Remark     *string  `json:"remark" db:"remark" validate:"omitempty"`                      // remark
+type UPDATEArticle struct {
+	DELETEArticle
+	AccountId *int    `json:"account_id" db:"account_id" validate:"omitempty"`     // account_id comment
+	Title     *string `json:"title" db:"title" validate:"omitempty,min=0,max=255"` // title comment
+	Content   *string `json:"content" db:"content" validate:"omitempty"`           // content comment
+	Stars     *int64  `json:"stars" db:"stars" validate:"omitempty"`               // stars comment
 }
 
 /* RowsScan, scan data directly, without using reflect. */
 
-func (s *Employee) rowsScanInitializePointer() {}
+func (s *Article) rowsScanInitializePointer() {}
 
-func (s *S000001Employee) RowsScanAll(custom func(get *hey.Get, where hey.Filter)) ([]*Employee, error) {
+func (s *S0000001Article) RowsScanAll(custom func(get *hey.Get, where hey.Filter)) ([]*Article, error) {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
 		custom(get, where)
 	}
 	get.Where(func(f hey.Filter) { f.Use(where) }).Select(s.columnSlice...)
-	return hey.RowsScanStructAllCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Employee) error {
+	return hey.RowsScanStructAllCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Article) error {
 		tmp.rowsScanInitializePointer()
 		return rows.Scan(
 			&tmp.Id,
-			&tmp.CompanyId,
-			&tmp.Name,
-			&tmp.Age,
-			&tmp.Birthday,
-			&tmp.Gender,
-			&tmp.Height,
-			&tmp.Weight,
-			&tmp.Health,
-			&tmp.Salary,
-			&tmp.Department,
-			&tmp.State,
-			&tmp.Remark,
+			&tmp.AccountId,
+			&tmp.Title,
+			&tmp.Content,
+			&tmp.Stars,
 			&tmp.CreatedAt,
 			&tmp.UpdatedAt,
-			&tmp.DeletedAt,
 		)
 	}, get)
 }
 
-func (s *S000001Employee) RowsScanOne(custom func(get *hey.Get, where hey.Filter)) (*Employee, error) {
+func (s *S0000001Article) RowsScanOne(custom func(get *hey.Get, where hey.Filter)) (*Article, error) {
 	get := s.Get()
 	where := s.Filter()
 	if custom != nil {
 		custom(get, where)
 	}
 	get.Where(func(f hey.Filter) { f.Use(where) }).Select(s.columnSlice...).Limit(1)
-	return hey.RowsScanStructOneCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Employee) error {
+	return hey.RowsScanStructOneCmder(get.GetContext(), get.GetWay(), func(rows *sql.Rows, tmp *Article) error {
 		tmp.rowsScanInitializePointer()
 		return rows.Scan(
 			&tmp.Id,
-			&tmp.CompanyId,
-			&tmp.Name,
-			&tmp.Age,
-			&tmp.Birthday,
-			&tmp.Gender,
-			&tmp.Height,
-			&tmp.Weight,
-			&tmp.Health,
-			&tmp.Salary,
-			&tmp.Department,
-			&tmp.State,
-			&tmp.Remark,
+			&tmp.AccountId,
+			&tmp.Title,
+			&tmp.Content,
+			&tmp.Stars,
 			&tmp.CreatedAt,
 			&tmp.UpdatedAt,
-			&tmp.DeletedAt,
 		)
 	}, get)
 }
 
-func (s *S000001Employee) RowsScanAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Employee) string) (map[string]*Employee, []*Employee, error) {
+func (s *S0000001Article) RowsScanAllMap(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Article) string) (map[string]*Article, []*Article, error) {
 	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[string]*Employee, len(all))
+	allMap := make(map[string]*Article, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-func (s *S000001Employee) RowsScanAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Employee) int) (map[int]*Employee, []*Employee, error) {
+func (s *S0000001Article) RowsScanAllMapInt(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Article) int) (map[int]*Article, []*Article, error) {
 	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int]*Employee, len(all))
+	allMap := make(map[int]*Article, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-func (s *S000001Employee) RowsScanAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Employee) int64) (map[int64]*Employee, []*Employee, error) {
+func (s *S0000001Article) RowsScanAllMapInt64(custom func(get *hey.Get, where hey.Filter), makeMapKey func(v *Article) int64) (map[int64]*Article, []*Article, error) {
 	all, err := s.RowsScanAll(custom)
 	if err != nil {
 		return nil, nil, err
 	}
-	allMap := make(map[int64]*Employee, len(all))
+	allMap := make(map[int64]*Article, len(all))
 	for _, v := range all {
 		allMap[makeMapKey(v)] = v
 	}
 	return allMap, all, nil
 }
 
-func (s DELETEEmployee) PrimaryKey() interface{} {
+func (s DELETEArticle) PrimaryKey() interface{} {
 	if s.Id != nil {
 		return *s.Id
 	}
@@ -820,12 +723,12 @@ func (s DELETEEmployee) PrimaryKey() interface{} {
 }
 
 // PrimaryKey Table primary key column name.
-func (s *S000001Employee) PrimaryKey() string {
+func (s *S0000001Article) PrimaryKey() string {
 	return s.ID
 }
 
 // PrimaryKeyUpdate Update based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -843,7 +746,7 @@ func (s *S000001Employee) PrimaryKeyUpdate(primaryKey abc.PrimaryKey, custom fun
 }
 
 // PrimaryKeyHidden Hidden based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -870,7 +773,7 @@ func (s *S000001Employee) PrimaryKeyHidden(primaryKey abc.PrimaryKey, custom fun
 }
 
 // PrimaryKeyDelete Delete based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom func(del *hey.Del, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -887,7 +790,7 @@ func (s *S000001Employee) PrimaryKeyDelete(primaryKey abc.PrimaryKey, custom fun
 }
 
 // PrimaryKeyUpsert Upsert based on the primary key as a condition. primaryKey can be any struct or struct pointer that implements the PrimaryKey interface. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKey == nil {
 		return 0, nil
 	}
@@ -912,7 +815,7 @@ func (s *S000001Employee) PrimaryKeyUpsert(primaryKey abc.PrimaryKey, add func(a
 }
 
 // PrimaryKeyUpdateAll Batch update based on primary key value.
-func (s *S000001Employee) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Article) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way, update func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -943,7 +846,7 @@ func (s *S000001Employee) PrimaryKeyUpdateAll(ctx context.Context, way *hey.Way,
 }
 
 // PrimaryKeyHiddenAll Batch hidden based on primary key value.
-func (s *S000001Employee) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Article) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way, hidden func(del *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -974,7 +877,7 @@ func (s *S000001Employee) PrimaryKeyHiddenAll(ctx context.Context, way *hey.Way,
 }
 
 // PrimaryKeyDeleteAll Batch deletes it based on primary key value.
-func (s *S000001Employee) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Article) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way, remove func(del *hey.Del, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -1005,7 +908,7 @@ func (s *S000001Employee) PrimaryKeyDeleteAll(ctx context.Context, way *hey.Way,
 }
 
 // PrimaryKeyUpsertAll Batch upsert based on primary key value.
-func (s *S000001Employee) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
+func (s *S0000001Article) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way, add func(add *hey.Add), get func(get *hey.Get, where hey.Filter), mod func(mod *hey.Mod, where hey.Filter), pks []abc.PrimaryKey) (int64, error) {
 	if len(pks) == 0 {
 		return 0, nil
 	}
@@ -1057,17 +960,17 @@ func (s *S000001Employee) PrimaryKeyUpsertAll(ctx context.Context, way *hey.Way,
 }
 
 // PrimaryKeyEqual Build Filter PrimaryKey = value
-func (s *S000001Employee) PrimaryKeyEqual(value interface{}) hey.Filter {
+func (s *S0000001Article) PrimaryKeyEqual(value interface{}) hey.Filter {
 	return s.way.F().Equal(s.PrimaryKey(), value)
 }
 
 // PrimaryKeyIn Build Filter PrimaryKey IN ( values... )
-func (s *S000001Employee) PrimaryKeyIn(values ...interface{}) hey.Filter {
+func (s *S0000001Article) PrimaryKeyIn(values ...interface{}) hey.Filter {
 	return s.way.F().In(s.PrimaryKey(), values...)
 }
 
 // PrimaryKeyUpdateMap Update a row of data using map[string]interface{} by primary key value. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modify map[string]interface{}, update func(mod *hey.Mod, where hey.Filter)) (int64, error) {
 	if primaryKeyValue == nil || len(modify) == 0 {
 		return 0, nil
 	}
@@ -1081,7 +984,7 @@ func (s *S000001Employee) PrimaryKeyUpdateMap(primaryKeyValue interface{}, modif
 }
 
 // PrimaryKeyUpsertMap Upsert a row of data using map[string]interface{} by primary key value. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error) {
+func (s *S0000001Article) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upsert map[string]interface{}, way *hey.Way) (int64, error) {
 	if len(upsert) == 0 {
 		return 0, nil
 	}
@@ -1102,7 +1005,7 @@ func (s *S000001Employee) PrimaryKeyUpsertMap(primaryKeyValue interface{}, upser
 }
 
 // PrimaryKeySelectAll Query multiple records based on primary key values. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeySelectAll(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) ([]*Employee, error) {
+func (s *S0000001Article) PrimaryKeySelectAll(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) ([]*Article, error) {
 	return s.SelectAll(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyIn(primaryKeyValues))
 		if custom != nil {
@@ -1112,7 +1015,7 @@ func (s *S000001Employee) PrimaryKeySelectAll(primaryKeyValues interface{}, cust
 }
 
 // PrimaryKeySelectOne Query a piece of data based on the primary key value. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeySelectOne(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Employee, error) {
+func (s *S0000001Article) PrimaryKeySelectOne(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Article, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		if custom != nil {
@@ -1122,7 +1025,7 @@ func (s *S000001Employee) PrimaryKeySelectOne(primaryKeyValue interface{}, custo
 }
 
 // PrimaryKeySelectOneAsc Query a piece of data based on the primary key value. Additional conditions can be added in the filter. ORDER BY PrimaryKey ASC
-func (s *S000001Employee) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Employee, error) {
+func (s *S0000001Article) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Article, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		get.Asc(s.PrimaryKey())
@@ -1133,7 +1036,7 @@ func (s *S000001Employee) PrimaryKeySelectOneAsc(primaryKeyValue interface{}, cu
 }
 
 // PrimaryKeySelectOneDesc Query a piece of data based on the primary key value. Additional conditions can be added in the filter. ORDER BY PrimaryKey DESC
-func (s *S000001Employee) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Employee, error) {
+func (s *S0000001Article) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (*Article, error) {
 	return s.SelectOne(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyEqual(primaryKeyValue))
 		get.Desc(s.PrimaryKey())
@@ -1144,7 +1047,7 @@ func (s *S000001Employee) PrimaryKeySelectOneDesc(primaryKeyValue interface{}, c
 }
 
 // PrimaryKeySelectExists Check whether the data exists based on the primary key value. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error) {
+func (s *S0000001Article) PrimaryKeySelectExists(primaryKeyValue interface{}, custom func(get *hey.Get, where hey.Filter)) (bool, error) {
 	if primaryKeyValue == nil {
 		return false, nil
 	}
@@ -1161,7 +1064,7 @@ func (s *S000001Employee) PrimaryKeySelectExists(primaryKeyValue interface{}, cu
 }
 
 // PrimaryKeySelectCount The number of statistics based on primary key values. Additional conditions can be added in the filter.
-func (s *S000001Employee) PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error) {
+func (s *S0000001Article) PrimaryKeySelectCount(primaryKeyValues interface{}, custom func(get *hey.Get, where hey.Filter)) (int64, error) {
 	if primaryKeyValues == nil {
 		return 0, nil
 	}
@@ -1173,18 +1076,18 @@ func (s *S000001Employee) PrimaryKeySelectCount(primaryKeyValues interface{}, cu
 	})
 }
 
-// PrimaryKeySelectAllMap Make map[int]*Employee and []*Employee
-func (s *S000001Employee) PrimaryKeySelectAllMap(primaryKeys interface{}, custom func(get *hey.Get, where hey.Filter)) (map[int]*Employee, []*Employee, error) {
+// PrimaryKeySelectAllMap Make map[int]*Article and []*Article
+func (s *S0000001Article) PrimaryKeySelectAllMap(primaryKeys interface{}, custom func(get *hey.Get, where hey.Filter)) (map[int]*Article, []*Article, error) {
 	return s.SelectAllMapInt(func(get *hey.Get, where hey.Filter) {
 		where.Use(s.PrimaryKeyIn(primaryKeys))
 		if custom != nil {
 			custom(get, where)
 		}
-	}, func(v *Employee) int { return v.Id })
+	}, func(v *Article) int { return v.Id })
 }
 
 // PrimaryKeyUpsertOne Update or Insert one.
-func (s *S000001Employee) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error) {
+func (s *S0000001Article) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upsert interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add), mod func(mod *hey.Mod, where hey.Filter)) (exists bool, affectedRowsOrIdValue int64, err error) {
 	exists, err = s.SelectExists(func(query *hey.Get, where hey.Filter) {
 		query.Select(s.PrimaryKey())
 		where.Equal(s.PrimaryKey(), primaryKeyValue)
@@ -1213,14 +1116,14 @@ func (s *S000001Employee) PrimaryKeyUpsertOne(primaryKeyValue interface{}, upser
 }
 
 // Backup Constructing a backup statement.
-func (s *S000001Employee) Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
+func (s *S0000001Article) Backup(limit int64, custom func(get *hey.Get, where hey.Filter), backup func(add *hey.Add, creates interface{}) (affectedRows int64, err error)) error {
 	if backup == nil {
 		return nil
 	}
 	var idMin int
 	var affectedRows int64
 	var err error
-	var lists []*Employee
+	var lists []*Article
 	for {
 		lists, err = s.RowsScanAll(func(get *hey.Get, where hey.Filter) {
 			where.GreaterThan(s.PrimaryKey(), idMin)
@@ -1248,7 +1151,7 @@ func (s *S000001Employee) Backup(limit int64, custom func(get *hey.Get, where he
 }
 
 // NotFoundInsert If it does not exist, it will be created.
-func (s *S000001Employee) NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error) {
+func (s *S0000001Article) NotFoundInsert(create interface{}, get func(get *hey.Get, where hey.Filter), add func(add *hey.Add)) (exists bool, err error) {
 	exists, err = s.SelectExists(get)
 	if err != nil {
 		return
@@ -1261,7 +1164,7 @@ func (s *S000001Employee) NotFoundInsert(create interface{}, get func(get *hey.G
 }
 
 // Truncate Clear all data in the table.
-func (s *S000001Employee) Truncate(ctx context.Context) (int64, error) {
+func (s *S0000001Article) Truncate(ctx context.Context) (int64, error) {
 	table := s.way.Replace(s.table)
 	if ctx == nil {
 		ctx = context.Background()
@@ -1280,17 +1183,17 @@ func (s *S000001Employee) Truncate(ctx context.Context) (int64, error) {
 }
 
 // ValueStruct struct value
-func (s *S000001Employee) ValueStruct() interface{} {
-	return Employee{}
+func (s *S0000001Article) ValueStruct() interface{} {
+	return Article{}
 }
 
 // ValueStructPtr struct pointer value
-func (s *S000001Employee) ValueStructPtr() interface{} {
-	return &Employee{}
+func (s *S0000001Article) ValueStructPtr() interface{} {
+	return &Article{}
 }
 
 // ValueSliceStruct slice struct value
-func (s *S000001Employee) ValueSliceStruct(capacities ...int) interface{} {
+func (s *S0000001Article) ValueSliceStruct(capacities ...int) interface{} {
 	capacity := 8
 	for i := len(capacities) - 1; i >= 0; i++ {
 		if capacities[i] >= 0 {
@@ -1298,11 +1201,11 @@ func (s *S000001Employee) ValueSliceStruct(capacities ...int) interface{} {
 			break
 		}
 	}
-	return make([]Employee, 0, capacity)
+	return make([]Article, 0, capacity)
 }
 
 // ValueSliceStructPtr slice struct pointer value
-func (s *S000001Employee) ValueSliceStructPtr(capacities ...int) interface{} {
+func (s *S0000001Article) ValueSliceStructPtr(capacities ...int) interface{} {
 	capacity := 8
 	for i := len(capacities) - 1; i >= 0; i++ {
 		if capacities[i] >= 0 {
@@ -1310,114 +1213,96 @@ func (s *S000001Employee) ValueSliceStructPtr(capacities ...int) interface{} {
 			break
 		}
 	}
-	return make([]*Employee, 0, capacity)
+	return make([]*Article, 0, capacity)
 }
 
-func (s *S000001Employee) Alias(aliases ...string) *S000001EmployeeAlias {
+func (s *S0000001Article) Alias(aliases ...string) *S0000001ArticleAlias {
 	alias := s.table
 	if tmp := hey.LastNotEmptyString(aliases); tmp != "" {
 		alias = tmp
 	}
 	table := s.way.T().SetAlias(alias)
 	column := func(column string) string { return table.Column(column) }
-	tmp := &S000001EmployeeAlias{
-		ID:         column(s.ID),         // id
-		COMPANY_ID: column(s.COMPANY_ID), // company_id
-		NAME:       column(s.NAME),       // name
-		AGE:        column(s.AGE),        // age
-		BIRTHDAY:   column(s.BIRTHDAY),   // birthday
-		GENDER:     column(s.GENDER),     // gender unknown OR male OR female
-		HEIGHT:     column(s.HEIGHT),     // height unit: cm
-		WEIGHT:     column(s.WEIGHT),     // weight unit: kg
-		HEALTH:     column(s.HEALTH),     // health value
-		SALARY:     column(s.SALARY),     // salary
-		DEPARTMENT: column(s.DEPARTMENT), // department
-		STATE:      column(s.STATE),      // state
-		REMARK:     column(s.REMARK),     // remark
-		CREATED_AT: column(s.CREATED_AT), // created_at
-		UPDATED_AT: column(s.UPDATED_AT), // updated_at
-		DELETED_AT: column(s.DELETED_AT), // deleted_at
+	tmp := &S0000001ArticleAlias{
+		ID:         column(s.ID),         // id comment
+		ACCOUNT_ID: column(s.ACCOUNT_ID), // account_id comment
+		TITLE:      column(s.TITLE),      // title comment
+		CONTENT:    column(s.CONTENT),    // content comment
+		STARS:      column(s.STARS),      // stars comment
+		CREATED_AT: column(s.CREATED_AT), // created_at comment
+		UPDATED_AT: column(s.UPDATED_AT), // updated_at comment
 
 		table: s.table,
 		alias: alias,
 	}
-	tmp.S000001Employee = s
+	tmp.S0000001Article = s
 	tmp.tableColumn = table
 	return tmp
 }
 
-func (s *S000001Employee) AliasA() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasA() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasA)
 }
 
-func (s *S000001Employee) AliasB() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasB() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasB)
 }
 
-func (s *S000001Employee) AliasC() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasC() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasC)
 }
 
-func (s *S000001Employee) AliasD() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasD() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasD)
 }
 
-func (s *S000001Employee) AliasE() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasE() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasE)
 }
 
-func (s *S000001Employee) AliasF() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasF() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasF)
 }
 
-func (s *S000001Employee) AliasG() *S000001EmployeeAlias {
+func (s *S0000001Article) AliasG() *S0000001ArticleAlias {
 	return s.Alias(hey.AliasG)
 }
 
-type S000001EmployeeAlias struct {
-	*S000001Employee
+type S0000001ArticleAlias struct {
+	*S0000001Article
 	tableColumn *hey.TableColumn
 
-	ID         string // id
-	COMPANY_ID string // company_id
-	NAME       string // name
-	AGE        string // age
-	BIRTHDAY   string // birthday
-	GENDER     string // gender unknown OR male OR female
-	HEIGHT     string // height unit: cm
-	WEIGHT     string // weight unit: kg
-	HEALTH     string // health value
-	SALARY     string // salary
-	DEPARTMENT string // department
-	STATE      string // state
-	REMARK     string // remark
-	CREATED_AT string // created_at
-	UPDATED_AT string // updated_at
-	DELETED_AT string // deleted_at
+	ID         string // id comment
+	ACCOUNT_ID string // account_id comment
+	TITLE      string // title comment
+	CONTENT    string // content comment
+	STARS      string // stars comment
+	CREATED_AT string // created_at comment
+	UPDATED_AT string // updated_at comment
 
 	table string
 	alias string
 }
 
-func (s *S000001EmployeeAlias) Table() string {
+func (s *S0000001ArticleAlias) Table() string {
 	return s.table
 }
 
-func (s *S000001EmployeeAlias) Alias() string {
+func (s *S0000001ArticleAlias) Alias() string {
 	if s.alias != "" {
 		return s.alias
 	}
 	return s.Table()
 }
 
-func (s *S000001EmployeeAlias) Model() *S000001Employee {
-	return s.S000001Employee
+func (s *S0000001ArticleAlias) Model() *S0000001Article {
+	return s.S0000001Article
 }
 
-func (s *S000001EmployeeAlias) TableColumn() *hey.TableColumn {
+func (s *S0000001ArticleAlias) TableColumn() *hey.TableColumn {
 	return s.tableColumn
 }
 
-func (s *S000001EmployeeAlias) Column(except ...string) []string {
+func (s *S0000001ArticleAlias) Column(except ...string) []string {
 	return s.TableColumn().ColumnAll(s.Model().Column(except...)...)
 }
