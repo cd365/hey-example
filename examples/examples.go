@@ -451,7 +451,7 @@ func (s *DB) Transaction1() error {
 			args4...,
 		)
 		if err != nil {
-			if errors.Is(err, hey.RecordDoesNotExists) {
+			if errors.Is(err, hey.ErrNoRows) {
 				// todo
 				// return errors.New("record does not exists")
 			} else {
