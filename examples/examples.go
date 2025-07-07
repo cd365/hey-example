@@ -53,8 +53,7 @@ func NewDB() (*DB, error) {
 	cfg.Manual = hey.Postgresql()
 	cfg.Manual.Replace = hey.NewReplace()
 
-	colorWrite := logger.NewMyWrite(nil)
-	colorWrite.PriorityWrite(colorWrite.ColorWrite)
+	colorWrite := logger.NewLevelColor(nil)
 
 	// Record SQL log.
 	lg := logger.NewLogger(colorWrite)

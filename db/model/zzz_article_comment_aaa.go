@@ -1,4 +1,4 @@
-// code template version: v3.0.0 e9ec97f8959c580123ea8ffbcfd1e2961fc08160 1750737071-20250624115111
+// code template version: v3.0.0 c1e9fa185ac15a16f8d77f036522e8e685879b26 1751872125-20250707150845
 // TEMPLATE CODE DO NOT EDIT IT.
 
 package model
@@ -355,7 +355,7 @@ func (s *S0000001ArticleComment) SelectOne(custom func(get *hey.Get, where hey.F
 		return nil, err
 	}
 	if len(all) == 0 {
-		return nil, hey.RecordDoesNotExists
+		return nil, hey.ErrNoRows
 	}
 	return all[0], nil
 }
@@ -368,7 +368,7 @@ func (s *S0000001ArticleComment) SelectExists(custom func(get *hey.Get, where he
 		}
 		get.Select(s.columnSlice[0])
 	})
-	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
+	if err != nil && !errors.Is(err, hey.ErrNoRows) {
 		return false, err
 	}
 	return exists != nil, nil
@@ -1037,7 +1037,7 @@ func (s *S0000001ArticleComment) PrimaryKeySelectExists(primaryKeyValue interfac
 		}
 		get.Select(s.PrimaryKey())
 	})
-	if err != nil && !errors.Is(err, hey.RecordDoesNotExists) {
+	if err != nil && !errors.Is(err, hey.ErrNoRows) {
 		return false, err
 	}
 	return exists != nil, nil

@@ -1,7 +1,7 @@
-github.com/cd365/hey/v3 v3.1.1-0.20250626080747-c0225962f015 h1:2Myp/qK7+vaN3NnoRQxS1oaS09V5L3ZFhVZrOWUTcdg=
-github.com/cd365/hey/v3 v3.1.1-0.20250626080747-c0225962f015/go.mod h1:jprCFklQo/R7tNPZaLXap6F6mbq9t4OoG5Yr5uhtyRU=
-github.com/cd365/logger/v9 v9.0.0-20250623053828-9873a77f37d2 h1:WtNyVswSKRulli+fvPV1rBJeskamgfD/FyUQblx+E7M=
-github.com/cd365/logger/v9 v9.0.0-20250623053828-9873a77f37d2/go.mod h1:+T4O1uWoI+ShJAuAjtK/V+H7VsjSq3PSari8PwAT9R4=
+github.com/cd365/hey/v3 v3.2.0 h1:5QNzari+Mcwli27hrO0WUK5pSI+r+/3lzUCv3cSFbAc=
+github.com/cd365/hey/v3 v3.2.0/go.mod h1:aYZ005qjDqVlo77BjOklKS80fP9qr5D90avIsqnOmiM=
+github.com/cd365/logger/v9 v9.0.0 h1:H70UkpLou9APCJuo4/bKfAbS1Q5YoyOlTWsqeL6vmGM=
+github.com/cd365/logger/v9 v9.0.0/go.mod h1:+T4O1uWoI+ShJAuAjtK/V+H7VsjSq3PSari8PwAT9R4=
 github.com/coreos/go-systemd/v22 v22.5.0/go.mod h1:Y58oyj3AT4RCenI/lSvhwexgC+NSVTIJ3seZv2GcEnc=
 github.com/godbus/dbus/v5 v5.0.4/go.mod h1:xhWf0FNVPg57R7Z0UbKHbJfkEywrmjJnf7w5xrFpKfA=
 github.com/lib/pq v1.10.9 h1:YXG7RB+JIjhP29X+OtkiDnYaXQwpS4JEWq7dtCCRUEw=
